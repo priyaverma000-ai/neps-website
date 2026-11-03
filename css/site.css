@@ -445,6 +445,9 @@ details.q div{padding:0 16px 15px;color:var(--muted);font-size:15.5px;line-heigh
 .sgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .sgrid .sport{aspect-ratio:3/4}
 .sgrid .sport h3{font-size:20px}
+a.sport{text-decoration:none;color:#fff;transition:transform .18s}
+a.sport:hover{transform:translateY(-3px)}
+.more a{color:inherit;text-decoration:none}
 .fgrid{display:grid;gap:12px}
 .fcard{background:#fff;border:1px solid var(--line);border-radius:var(--r-m);overflow:hidden;scroll-margin-top:140px}
 .fcard>img{width:100%;aspect-ratio:16/9;object-fit:cover}
