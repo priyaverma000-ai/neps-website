@@ -1,0 +1,7 @@
+# Draft site: keep it out of search engines until it replaces nepsdwarka.com.
+# At launch, replace with:
+#   User-agent: *
+#   Allow: /
+#   Sitemap: https://nepsdwarka.com/sitemap.xml
+User-agent: *
+Disallow: /
