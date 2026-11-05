@@ -152,14 +152,26 @@
       o.value = n; o.textContent = $('th', r).textContent;
       feeSel.appendChild(o);
     });
+    // Columns: monthly total, due at admission (monthly plan), due at admission (quarterly plan), then the breakdown
+    var plan = 'monthly', plans = $$('[data-plan]');
     var showFee = function () {
       var c = $$('td', feeRows[feeSel.value]).map(function (td) { return td.textContent; });
+      var q = plan === 'quarterly';
       $('#fee-month').textContent = '₹' + c[0];
-      $('#fee-due').textContent = '₹' + c[1];
-      $('#fee-rows').innerHTML = c.slice(2).map(function (v, n) {
-        return v === '0' ? '' : '<div><dt>' + feeHead[n + 3] + '</dt><dd>₹' + v + '</dd></div>';
+      $('#fee-due').textContent = '₹' + (q ? c[2] : c[1]);
+      $('#fee-due-label').textContent = q ? 'Quarterly admission fee' : 'Due at admission';
+      $('#fee-note').textContent = q ? 'As shown in the school\'s quarterly fee plan for 2026-27.' : 'One-time admission fee of ₹7,196 plus the first month\'s fee.';
+      $('#fee-rows').innerHTML = c.slice(3).map(function (v, n) {
+        return v === '0' ? '' : '<div><dt>' + feeHead[n + 4] + '</dt><dd>₹' + v + '</dd></div>';
       }).join('');
     };
+    plans.forEach(function (b) {
+      b.addEventListener('click', function () {
+        plan = b.dataset.plan;
+        plans.forEach(function (x) { x.setAttribute('aria-pressed', x === b); });
+        showFee();
+      });
+    });
     feeSel.addEventListener('change', showFee);
     showFee();
   }
