@@ -33,6 +33,11 @@ The first line of each page in `src/tpl` holds its Google title, description, ad
 
 Add `||noindex` at the end to keep a page out of Google.
 
+## FAQs and parent videos
+
+- **FAQs:** each page's questions live in `src/faqs.json`. Edit the question and answer text there and rebuild. The build adds the FAQ section and Google's FAQ markup to the page.
+- **Parent videos:** the three cards on Home and the Reviews page are in `src/tpl/_testimonials.html`. Upload each video to YouTube, then paste its ID (the part after `watch?v=`) into that card's `data-yt=""`. The card then shows the video's thumbnail and plays it when tapped. Until then it shows "Recording pending".
+
 ## Forms
 
 Forms check the name, mobile number and class, then open WhatsApp (+91 98705 52633) with the details filled in. Nothing is stored. To also save leads, set `leadEndpoint` at the top of `js/site.js` to an Edunext or Google Sheet web-app URL.

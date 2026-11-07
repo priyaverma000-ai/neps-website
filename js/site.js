@@ -181,6 +181,26 @@
     b.addEventListener('click', function () { window.print(); });
   });
 
+  /* Parent video cards: show the YouTube thumbnail, load the player only on tap */
+  $$('.vt').forEach(function (card) {
+    var id = card.dataset.yt;
+    if (!id) { card.setAttribute('aria-disabled', 'true'); card.setAttribute('aria-label', card.dataset.label + ', recording pending'); return; }
+    card.classList.add('has-video');
+    card.setAttribute('aria-label', 'Play the ' + card.dataset.label);
+    card.style.backgroundImage = 'url(https://i.ytimg.com/vi/' + encodeURIComponent(id) + '/hqdefault.jpg)';
+    var pending = $('.vt-pending', card); if (pending) pending.remove();
+    card.addEventListener('click', function () {
+      if ($('iframe', card)) return;
+      var f = document.createElement('iframe');
+      f.src = 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(id) + '?autoplay=1&rel=0';
+      f.title = card.dataset.label;
+      f.allow = 'autoplay; encrypted-media; picture-in-picture';
+      f.allowFullscreen = true;
+      card.appendChild(f);
+      track('testimonial_play', { video: card.dataset.label });
+    });
+  });
+
   /* Virtual tour: the file loads only after a tap */
   function playTour() {
     var box = $('#tour');

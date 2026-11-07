@@ -1,0 +1,254 @@
+{
+"index.html": {"topic": "New Era Public School, Dwarka", "faq": [
+ ["Where is New Era Public School, Dwarka?", "In Sector 25, Dwarka, New Delhi 110077, on a 5-acre green campus."],
+ ["Which board and classes does New Era Dwarka offer?", "New Era is a CBSE school from Nursery to Class XII. For 2027-28, pre-registration is open for Nursery, Lower KG, Upper KG and Class I to IX."],
+ ["Is lunch included in the school fee?", "Yes. A mid-day meal is part of the monthly fee up to Class V."],
+ ["What sports can children play at New Era?", "The New Era Sports Centre has a 10 metre shooting range, three clay tennis courts, a cricket field and nets, basketball, football, table tennis, skating, pickleball, a gym, yoga and Zumba, with coaches on campus."],
+ ["How can I visit the school?", "Book a campus visit online, message us on WhatsApp at +91 98705 52633, or call +91 99101 19040."]
+]},
+"blog.html": {"topic": "the Parent Journal", "faq": [
+ ["What is the New Era Parent Journal?", "It is New Era Public School, Dwarka's blog for parents, with admission guides, parenting tips, CBSE updates and stories from campus."],
+ ["Who writes the Parent Journal?", "Articles are written by the New Era editorial team."],
+ ["Where can I find 2027-28 admission information?", "The Admissions section has the classes, age rules, steps, fees, documents and dates for 2027-28."]
+]},
+"blog-post.html": {"topic": "sports in school", "faq": [
+ ["Why are sports important in school?", "Sport teaches teamwork, gives children a safe way to lose and try again, builds resilience, and helps children find something they are good at."],
+ ["What should I ask about sports when visiting a school?", "Ask which sports have a dedicated coach, when children train, whether beginners can join, whether facilities are on campus, and what happens on poor air quality days."],
+ ["Which sports facilities does New Era have on campus?", "A cricket field and two nets, a basketball court, a football field, three clay tennis courts, a pickleball court, an indoor shooting range, a table tennis hall and a gymnasium."]
+]},
+"admissions.html": {"topic": "admissions 2027-28", "faq": [
+ ["Is admission open for 2027-28 at New Era Dwarka?", "Pre-registration is open now for Nursery, Lower KG, Upper KG and Class I to IX. Form dates follow the DoE schedule for 2027-28, which is yet to be announced."],
+ ["What are the steps to get admission?", "Enquire by form, WhatsApp or phone; visit the campus; fill the online registration form; then pay the fee and submit documents once your child's name is on the list."],
+ ["What changed in Delhi school classes for 2027-28?", "The DoE has added Lower KG and Upper KG before Class I. A child's age on 31 March 2027 decides the class, and the uniform age for Class I is moving to 6+."],
+ ["Can I get the admission dates on WhatsApp?", "Yes. Message +91 98705 52633 and the admission team will share the dates as soon as they are announced."]
+]},
+"nursery-admission-2027-28.html": {"topic": "", "faq": []},
+"admission-class-1-to-9.html": {"topic": "Class I to IX admission", "faq": [
+ ["Can my child join Class I in 2027-28?", "2027-28 is a transition year. In the DoE table, Class I is filled by children promoted from KG in 2026-27, so please speak to the admission team about your child's case before registering."],
+ ["Do the DoE age rules apply when changing schools?", "A child who has passed the previous class at a recognised school, with a valid School Leaving Certificate and mark sheet, is exempt from the age criteria for the next class."],
+ ["What is the monthly fee for Class I to IX?", "In 2026-27 the monthly fee ranges from ₹8,431 to ₹11,650 depending on the class. A quarterly plan is also available."],
+ ["Which documents are needed for Class I to IX admission?", "The School Leaving Certificate, the latest mark sheet or report card, the birth certificate, address proof and photographs."]
+]},
+"age-calculator.html": {"topic": "the school age calculator", "faq": [
+ ["How is my child's class decided for 2027-28?", "By your child's age on 31 March 2027, under the DoE Delhi rules: Nursery 3+ up to 4, Lower KG 4+ up to 5, and Upper KG 5+ up to 6."],
+ ["What if my child's birthday is close to 31 March?", "The Head of School can relax the minimum or maximum age by up to one month. Ask the admission team about your child."],
+ ["Is the birth date I enter saved anywhere?", "No. The calculator works in your browser and the date is not sent to the school unless you choose to message us."]
+]},
+"admission-criteria.html": {"topic": "admission criteria", "faq": [
+ ["How are admission seats decided at New Era Dwarka?", "Seats follow the school's published points criteria and the DoE rules. The points table for 2027-28 will be published on this page."],
+ ["Is there an age requirement for Nursery and KG?", "Yes. Your child must fit the class age on 31 March 2027: Nursery 3+, Lower KG 4+ and Upper KG 5+, with up to one month of relaxation allowed by the Head of School."],
+ ["Where can I read the official DoE notice?", "The DoE circular on age of admission, dated 24 October 2025, is linked on this page, along with the Directorate of Education website."]
+]},
+"admission-documents.html": {"topic": "admission documents", "faq": [
+ ["What documents are needed for nursery admission?", "The child's birth certificate, recent photographs, address proof and the parents' identity documents."],
+ ["What extra documents are needed for Class I and above?", "The School Leaving Certificate from the previous school and the latest mark sheet or report card."],
+ ["Can I print the documents checklist?", "Yes. Use Print or save as PDF on this page, or share it on WhatsApp."]
+]},
+"fee-structure.html": {"topic": "school fees", "faq": [
+ ["What is the monthly fee at New Era Public School, Dwarka?", "In 2026-27 the monthly fee ranges from ₹8,431 to ₹11,650 by class. For Nursery and LKG it is ₹10,216."],
+ ["How much is paid at the time of admission?", "On the monthly plan, the one-time admission fee of ₹7,196 plus the first month's fee, for example ₹17,412 for Nursery and LKG. The quarterly plan figures are shown in the table."],
+ ["What does the school fee include?", "A/C charges in every class, a mid-day meal up to Class V, e-learning from Class I to X, and STEM and Robotics activities. Robotics kits are bought separately."],
+ ["What is not included in the fee?", "Uniforms, books, school bags and outstation or educational tours. Sport beyond the regular school curriculum carries an additional charge."],
+ ["Are school fees refundable?", "No. All fees paid are non-refundable and non-transferable."]
+]},
+"admission-lists.html": {"topic": "admission lists", "faq": [
+ ["When will the 2027-28 first admission list be published?", "On the date set by the DoE schedule for 2027-28, which is yet to be announced."],
+ ["Where will New Era publish the admission lists?", "On this page: the first list, second list and any waiting list."],
+ ["How can I find out when a list is published?", "Message the admission team on WhatsApp at +91 98705 52633 and they will share each list date."]
+]},
+"mid-session-admission.html": {"topic": "mid-session admission", "faq": [
+ ["Can my child join New Era in the middle of the school year?", "Yes, if there is a vacancy in your child's class. Call or WhatsApp the admission team to check."],
+ ["Is there an assessment for mid-session admission?", "For Class I to VIII, the school's rules base admission on a written and oral assessment."],
+ ["When are school fees due each month?", "By the 10th of the month. A late fee applies after that."]
+]},
+"transport.html": {"topic": "school transport", "faq": [
+ ["Does New Era Public School, Dwarka provide school bus transport?", "Yes. The charge depends on how far you live from the school in Sector 25."],
+ ["How much does school transport cost?", "In 2026-27: ₹3,140 for 0 to 2 km, ₹3,890 for 2 to 5 km and ₹4,280 above 5 km."],
+ ["Does the school bus cover my sector?", "Send your sector or area on WhatsApp to +91 98705 52633 and the team will confirm the route, pick-up point and timing."]
+]},
+"why-new-era.html": {"topic": "choosing New Era", "faq": [
+ ["Why do parents choose New Era Public School, Dwarka?", "For a New Era legacy since 1960, an on-campus Sports Centre, lunch included up to Class V, caring teachers, and a safe, green 5-acre campus."],
+ ["Does the school have a counsellor and special educator?", "Yes. A full-time school counsellor and a full-time special educator support every child."],
+ ["Does New Era offer NCC?", "Yes. National Cadet Corps training was introduced in the 2025-26 session."]
+]},
+"our-legacy.html": {"topic": "the New Era story", "faq": [
+ ["When was New Era Public School founded?", "New Era began in 1960 as a one-room school. Work on its permanent campus started in 1977."],
+ ["When did the Dwarka campus open?", "New Era opened its school in Dwarka in 1989."],
+ ["Who leads New Era Public School, Dwarka today?", "Mrs. Usha Chopra is Chairperson and Mr. Rohit Chopra is Director."]
+]},
+"leadership.html": {"topic": "the school's leadership", "faq": [
+ ["Who is the Head of School at New Era Dwarka?", "Dr. Priti Ramendra, with 25 years in teaching and school leadership, a Ph.D. in English and two Best Teacher Awards."],
+ ["Who is the Chairperson of New Era Public School, Dwarka?", "Mrs. Usha Chopra, who received the Delhi Government State Award for Excellence in Education in 1991."],
+ ["Who is the Director of the school?", "Mr. Rohit Chopra, a lifelong sportsperson who leads the school's focus on sport and learning beyond the classroom."],
+ ["Who is the Academic Advisor?", "Ms. Kanwal Kohli, who was Principal of New Era Public School, Dwarka from 2017 to 2025."]
+]},
+"vision-mission.html": {"topic": "our vision and values", "faq": [
+ ["What is the vision of New Era Public School, Dwarka?", "Character, Commitment and Consistency."],
+ ["What is the school's mission?", "To nurture lifelong learners who think critically and communicate effectively."],
+ ["What is the school motto?", "तमसो मा ज्योतिर्गमय, which means lead us from darkness to light."]
+]},
+"faculty.html": {"topic": "our teachers", "faq": [
+ ["How qualified are the teachers at New Era Dwarka?", "Subject teachers are postgraduates with a B.Ed., and many are CTET or NET qualified."],
+ ["Do the youngest classes have a mother teacher?", "Yes. LKG, UKG and the junior classes each have a mother teacher."],
+ ["Is there a special educator at the school?", "Yes. The school has an RCI-certified special educator and a full-time counsellor."]
+]},
+"achievements.html": {"topic": "school achievements", "faq": [
+ ["What awards has New Era Public School, Dwarka received?", "It is a certified FIT India School and a Swachh Vidyalaya Puraskar recipient. Mrs. Usha Chopra received the Delhi Government State Award for Excellence in Education in 1991."],
+ ["How many New Era students competed at national level in 2025-26?", "Nine students, at CBSE Nationals in lawn tennis, shooting and gymnastics, and at the Khelo India Youth Games."],
+ ["Does New Era host inter-school events?", "Yes, including the Inter-School Sports Meet, the Renaissance and Junior Renaissance festivals, and an education fair."]
+]},
+"results.html": {"topic": "board results", "faq": [
+ ["Which board does New Era Public School, Dwarka follow?", "CBSE. New Era is a CBSE-affiliated senior secondary school, from Nursery to Class XII."],
+ ["Which streams are offered in Class XI and XII?", "Science (Medical and Non-Medical), Commerce with or without Mathematics, and Humanities."],
+ ["How does the school support board exam students?", "With three science labs for practicals, MUN and debate, and an education fair where universities meet senior students."]
+]},
+"reviews.html": {"topic": "parent reviews", "faq": [
+ ["What do parents say about New Era Public School, Dwarka?", "Parent video stories and written reviews will appear on this page, recorded with each family's consent."],
+ ["How can I share my family's New Era story?", "Send a message on WhatsApp to +91 98705 52633 and the team will set up a short chat."],
+ ["Can I see the school before deciding?", "Yes. Book a campus visit to see the classrooms, labs and Sports Centre and meet the team."]
+]},
+"sports-centre.html": {"topic": "the Sports Centre", "faq": [
+ ["Which sports are offered at New Era Sports Centre, Dwarka?", "Shooting, lawn tennis, pickleball, cricket, basketball, football, table tennis, skating, a gym, yoga and Zumba."],
+ ["Are there coaches at the Sports Centre?", "Yes. There is a coach for every sport, with beginner, intermediate and elite programmes."],
+ ["Is sports coaching included in the school fee?", "Sport within the regular school curriculum is part of school life. Training beyond the regular curriculum carries an additional fee."],
+ ["Is New Era a FIT India School?", "Yes. New Era Public School, Dwarka is a certified FIT India School."]
+]},
+"sport-shooting.html": {"topic": "shooting", "faq": [
+ ["Does New Era Dwarka have a shooting range?", "Yes. An indoor 10 metre range for air rifle and air pistol, with a coach."],
+ ["Is shooting a good sport for quiet children?", "Often, yes. Shooting rewards stillness, breathing and focus, and can suit children who don't enjoy contact sports."],
+ ["Have New Era students competed nationally in shooting?", "Yes. Vaasvi Rajput of Class X competed at the CBSE Nationals in 2025-26."]
+]},
+"sport-lawn-tennis.html": {"topic": "lawn tennis", "faq": [
+ ["How many tennis courts does New Era have?", "Three clay courts, on campus at the New Era Sports Centre in Sector 25, Dwarka."],
+ ["Can a beginner learn tennis at New Era?", "Yes. Coaching runs from first lessons through intermediate to elite level."],
+ ["How many New Era tennis players reached CBSE Nationals?", "Six students played lawn tennis at the CBSE Nationals in 2025-26."]
+]},
+"sport-pickleball.html": {"topic": "pickleball", "faq": [
+ ["When did the pickleball court open at New Era?", "On 14 August 2026, at the school's Independence Day celebration."],
+ ["Is pickleball easy for beginners?", "Yes. It uses a small court, a light paddle and a slower ball, so it is quick to learn."]
+]},
+"sport-cricket.html": {"topic": "cricket", "faq": [
+ ["What cricket facilities does New Era have?", "A cricket field for matches and two practice nets on campus."],
+ ["Is there cricket coaching for every level?", "Yes. Coaching runs at beginner, intermediate and elite level."]
+]},
+"sport-basketball.html": {"topic": "basketball", "faq": [
+ ["Does New Era have a basketball court?", "Yes. A dedicated outdoor basketball court at the New Era Sports Centre."],
+ ["Do basketball teams train with a coach?", "Yes. Teams train with a coach on campus."]
+]},
+"sport-football.html": {"topic": "football", "faq": [
+ ["Does New Era have a football field?", "Yes. A football field on the school campus, so there is no travel for practice."],
+ ["Is football coaching available for beginners?", "Yes. Coaching runs from beginner to elite level."]
+]},
+"sport-table-tennis.html": {"topic": "table tennis", "faq": [
+ ["Where do students play table tennis at New Era?", "In an indoor hall with several tables at the New Era Sports Centre."],
+ ["Can table tennis continue on hot or poor air days?", "Yes. Because the hall is indoors, practice can go on in any weather."]
+]},
+"sport-skating.html": {"topic": "skating", "faq": [
+ ["Can young children learn skating at New Era?", "Yes. Skating is a good first sport for younger children and is coached on campus."],
+ ["What does skating help children with?", "Balance, coordination and confidence."]
+]},
+"sport-gym-yoga-zumba.html": {"topic": "gym, yoga and Zumba", "faq": [
+ ["Does New Era have a gym for students?", "Yes. The Sports Centre has a fitness centre with modern equipment."],
+ ["Are yoga and Zumba classes offered?", "Yes. Yoga and Zumba classes are held at the New Era Sports Centre."]
+]},
+"sports-achievements.html": {"topic": "sports achievements", "faq": [
+ ["Which New Era students competed at national level in 2025-26?", "Kshitij Raj Sinha, Navya Yadav, Niraanjan Singh, Mehr Muralidass, Eshanya Khattar and Manshi Singh in lawn tennis, Vaasvi Rajput in shooting, Lavanya Attri in gymnastics, and Reyan Rawat at the Khelo India Youth Games."],
+ ["When was the New Era Sports Day in 2026?", "Sports Day, Udyatam 2026, was held on 31 October 2026."]
+]},
+"facilities.html": {"topic": "school facilities", "faq": [
+ ["Are the classrooms at New Era air-conditioned?", "Yes. Every classroom is air-conditioned and has an interactive smart board."],
+ ["Which labs does the school have?", "Three science labs for physics, chemistry and biology, computer labs, a social science lab, a robotics lab and a high performance computing lab."],
+ ["Is there a library?", "Yes. It has fiction and non-fiction for every age, journals, periodicals and daily newspapers."],
+ ["How big is the New Era campus?", "Five green acres in Sector 25, Dwarka, with AQI monitors across the campus."]
+]},
+"virtual-tour.html": {"topic": "the virtual tour", "faq": [
+ ["How long is the New Era virtual tour?", "About 60 seconds. It loads only when you press play."],
+ ["Can I visit the campus in person?", "Yes. Book a campus visit to see the school for yourself and meet the admission team."]
+]},
+"safety.html": {"topic": "safety and wellbeing", "faq": [
+ ["How does New Era monitor air quality?", "AQI monitors are installed across the 5-acre campus and track air quality through the day."],
+ ["Is there a counsellor for students?", "Yes. There is a full-time school counsellor and a full-time special educator."],
+ ["How does New Era keep children active and healthy?", "Sport, yoga and Zumba are part of school life at this certified FIT India School."]
+]},
+"pre-primary.html": {"topic": "pre-primary school", "faq": [
+ ["Which pre-primary classes does New Era Dwarka have?", "Nursery, Lower KG and Upper KG, for children aged 3 to 6."],
+ ["Is lunch included for pre-primary children?", "Yes. A mid-day meal is part of the monthly fee."],
+ ["What do young children do at New Era?", "They learn through play in colourful classrooms, with a play area, a splash pool, yoga, trips and celebrations."]
+]},
+"primary.html": {"topic": "the primary years", "faq": [
+ ["Which curriculum does New Era follow in Class I to V?", "XSEED, built on the prescribed CBSE content, with a focus on fundamental concepts and critical thinking."],
+ ["Is lunch included in Class I to V?", "Yes. A mid-day meal is part of the fee up to Class V."],
+ ["When can children join school clubs?", "From Class III, with gardening, art and craft, cooking, music and dance."]
+]},
+"middle-school.html": {"topic": "the middle years", "faq": [
+ ["What do Class VI to VIII students do beyond lessons?", "Clubs, debate and heritage quizzes, sport at the Sports Centre, and Kaushal Bodh skill visits to farms, nurseries and a hydroponic farm."],
+ ["Which labs do middle school students use?", "Science, computer, social science and robotics labs."],
+ ["Does the life skills programme continue in middle school?", "Yes. The Awakened Citizen Program by Ramakrishna Mission runs from Class I to VIII."]
+]},
+"senior-secondary.html": {"topic": "senior secondary", "faq": [
+ ["Which streams are available in Class XI at New Era Dwarka?", "Science (Medical and Non-Medical), Commerce with or without Mathematics, and Humanities."],
+ ["Is there an extra fee for Computer Science in Class XI and XII?", "Yes. Computer Science is an additional subject at ₹495."],
+ ["What leadership opportunities do senior students have?", "NCC, Model United Nations, the Innovation Council and the student council."]
+]},
+"curriculum.html": {"topic": "the curriculum", "faq": [
+ ["Which curriculum does New Era Public School, Dwarka follow?", "CBSE, aligned with the National Education Policy 2020, with XSEED from LKG to Class V."],
+ ["How are students assessed?", "Each stage has its own assessment structure, from LKG and UKG to Class X. The documents are linked on this page."],
+ ["Where can I find the syllabus for my child's class?", "On the Syllabus page, with class-wise planners and holiday homework for 2026-27."]
+]},
+"robotics-ai.html": {"topic": "STEM and robotics", "faq": [
+ ["Is robotics included in the school fee?", "Yes. All STEM and Robotics activity charges are part of the fee. Robotics kits are bought separately."],
+ ["Does New Era have a robotics lab?", "Yes, along with computer labs and a high performance computing lab."],
+ ["Does the school run free workshops for the community?", "Yes. Free robotics workshops for children, and free science and maths classes in the summer."]
+]},
+"lunch-nutrition.html": {"topic": "school lunch", "faq": [
+ ["Which classes get lunch at school?", "Nursery to Class V. The mid-day meal is not included from Class VI onwards."],
+ ["How much of the fee is for the meal?", "In 2026-27 the mid-day meal is ₹2,200 of the monthly fee."]
+]},
+"events.html": {"topic": "school events", "faq": [
+ ["What are the main events at New Era every year?", "Annual Day, Sports Day, the Renaissance festival and its Junior edition, MUN, debates, festivals and SPIC MACAY performances."],
+ ["When was Sports Day 2026?", "Udyatam 2026 was held on 31 October 2026."],
+ ["Do students go on trips?", "Yes, including museums, a zoo trip for the youngest classes, and Kaushal Bodh skill visits for the middle school."]
+]},
+"gallery.html": {"topic": "the photo gallery", "faq": [
+ ["Are these real photos of New Era Public School, Dwarka?", "Yes. Every photo is from our campus and school life."],
+ ["Can I see the campus in person?", "Yes. Book a campus visit to walk the classrooms, labs and Sports Centre."]
+]},
+"clubs-houses.html": {"topic": "clubs and houses", "faq": [
+ ["How many clubs does New Era Dwarka have?", "Eleven, including gardening, cooking, science, maths, English literary, movie-making, financial literacy, music and dance."],
+ ["What are the four school houses?", "Rig Veda (red), Sam Veda (blue), Atharva Veda (green) and Yajur Veda (yellow), named after the four Vedas."],
+ ["From which class can children join a club?", "From Class III. Some clubs are for Class III to V and others for Class VI to XII."]
+]},
+"alumni.html": {"topic": "the alumni network", "faq": [
+ ["How do I join the New Era Dwarka alumni list?", "Send your name, batch and email on WhatsApp to +91 98705 52633."],
+ ["When was the last alumni meet?", "The Alumni Meet 2026 was held on campus on 1 November 2026."]
+]},
+"in-the-news.html": {"topic": "news and media", "faq": [
+ ["How can journalists contact New Era Public School, Dwarka?", "Email info@nepsdwarka.com with the subject Media enquiry."],
+ ["Where can I see what is happening at school?", "Recent events are listed on this page and on the Events page."]
+]},
+"circulars.html": {"topic": "circulars", "faq": [
+ ["Where can I find the 2026-27 academic planner?", "It is linked on this page as a PDF."],
+ ["How do I pay school fees online?", "Use Pay fees online on this page, which opens the school's Edunext payment page."]
+]},
+"syllabus.html": {"topic": "the syllabus", "faq": [
+ ["Where can I download my child's syllabus for 2026-27?", "On this page. Choose your child's class to open the syllabus planner as a PDF."],
+ ["Is holiday homework available online?", "Yes. Holiday homework for every class from Nursery to Class XII is linked on this page."]
+]},
+"mandatory-disclosure.html": {"topic": "mandatory disclosure", "faq": [
+ ["What is CBSE mandatory public disclosure?", "Information every CBSE-affiliated school must publish, including general details, documents, results, staff and infrastructure."],
+ ["Where is New Era's mandatory disclosure?", "The disclosure document is linked on this page as a PDF."]
+]},
+"book-a-visit.html": {"topic": "campus visits", "faq": [
+ ["How do I book a campus visit at New Era Dwarka?", "Fill the form on this page with your preferred date and time. The team will confirm your slot on WhatsApp."],
+ ["What happens during a school visit?", "The admission team welcomes you, shows you the classrooms, labs, library and Sports Centre, and answers your questions about classes, fees and transport."]
+]},
+"contact.html": {"topic": "contacting the school", "faq": [
+ ["What is the address of New Era Public School, Dwarka?", "Sector 25, Dwarka, New Delhi 110077."],
+ ["What is the admission phone number?", "The admission desk is +91 76781 35632 or +91 87967 72281, and reception is +91 99101 19040."],
+ ["Can I contact the school on WhatsApp?", "Yes, at +91 98705 52633. It is usually the quickest way to get a reply."]
+]},
+"privacy-policy.html": {"topic": "your privacy", "faq": [
+ ["Does the website store my enquiry details?", "No. The form puts your details into a WhatsApp message to the admission team, and you choose whether to send it."],
+ ["How can I ask the school to delete my details?", "Email info@nepsdwarka.com."]
+]}
+}

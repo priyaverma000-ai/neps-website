@@ -6,8 +6,14 @@ $site='https://nepsdwarka.com'
 function Part($n){ [IO.File]::ReadAllText("$t\_$n.html",$enc) }
 function Get-Text($html){ ([Net.WebUtility]::HtmlDecode(($html -replace '<[^>]+>','')) -replace '\s+',' ').Trim() }
 function ConvertTo-JsonText($x){ $x | ConvertTo-Json -Depth 8 -Compress }
-$h=Part 'header'; $f=Part 'footer'; $head=Part 'head'; $enq=Part 'enquiry'; $calc=Part 'calc'; $nav=Part 'anav'
+$h=Part 'header'; $f=Part 'footer'; $head=Part 'head'; $enq=Part 'enquiry'; $calc=Part 'calc'; $nav=Part 'anav'; $tst=Part 'testimonials'
 $pages=Get-ChildItem "$t\*.html" | Where-Object { $_.Name -notlike '_*' }
+# Page FAQs live in src\faqs.json: { "page.html": { "topic": "...", "faq": [[question, answer], ...] } }
+$faqs=[IO.File]::ReadAllText("$s\faqs.json",$enc) | ConvertFrom-Json
+function Get-FaqSection($entry){
+  $items=foreach($qa in $entry.faq){ '    <details class="q"><summary>'+[Net.WebUtility]::HtmlEncode($qa[0])+'</summary><div>'+[Net.WebUtility]::HtmlEncode($qa[1])+'</div></details>' }
+  "<section class=`"sec page-faq`"><div class=`"wrap slim`">`n  <div class=`"sec-head rv`"><span class=`"eyebrow`">FAQ</span><h2 class=`"title`">Questions about $([Net.WebUtility]::HtmlEncode($entry.topic))</h2></div>`n  <div class=`"qa rv`">`n"+($items -join "`n")+"`n  </div>`n</div></section>`n"
+}
 
 # First pass: each page's public address, so breadcrumbs and the sitemap can use it
 $pathOf=@{'index.html'='/';'blog.html'='/blog/';'blog-post.html'='/blog/why-sports-matter-in-school'}
@@ -43,7 +49,15 @@ foreach($file in $pages){
     $top=$top.Replace('<!--SCHEMA-->','<script type="application/ld+json">'+(ConvertTo-JsonText $graph)+'</script>')
     $c=$top+"<body>`n<!--HEADER-->`n"+$c.Substring($m.Length)+"`n<!--FOOTER-->`n</body>`n</html>`n"
   }
-  $c=$c.Replace('<!--ANAV-->',$nav.Replace("href=`"$p`"","href=`"$p`" aria-current=`"page`"")).Replace('<!--CALC-->',$calc).Replace('<!--ENQUIRY-->',$enq)
+  $c=$c.Replace('<!--ANAV-->',$nav.Replace("href=`"$p`"","href=`"$p`" aria-current=`"page`"")).Replace('<!--CALC-->',$calc).Replace('<!--ENQUIRY-->',$enq).Replace('<!--TESTIMONIALS-->',$(if($p -eq 'reviews.html'){ [regex]::Replace($tst,'\s*<p class="rv"[^>]*><a class="link" href="reviews.html">.*?</p>','') }else{ $tst }))
+  $entry=$faqs.$p
+  if($entry -and $entry.faq.Count){
+    $sec=Get-FaqSection $entry
+    if($c.Contains('<!--ENQUIRY-->')){ $c=$c.Replace('<!--ENQUIRY-->',$sec+'<!--ENQUIRY-->') }
+    elseif($c.Contains('<section class="sec final">')){ $c=$c.Replace('<section class="sec final">',$sec+'<section class="sec final">') }
+    else { $c=$c.Replace('</main>',$sec+'</main>') }
+    if(-not $c.Contains('<!--FAQSCHEMA-->')){ $c=$c.Replace('</head>',"<!--FAQSCHEMA-->`n</head>") }
+  }
   if($c.Contains('<!--FAQSCHEMA-->')){
     $qs=[regex]::Matches($c,'<details class="q"(?: open)?><summary>(.*?)</summary><div>(.*?)</div></details>',[Text.RegularExpressions.RegexOptions]::Singleline) | ForEach-Object {
       @{'@type'='Question';name=(Get-Text $_.Groups[1].Value);acceptedAnswer=@{'@type'='Answer';text=(Get-Text $_.Groups[2].Value)}}
