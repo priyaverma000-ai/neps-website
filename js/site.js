@@ -176,6 +176,13 @@
     showFee();
   }
 
+  /* Admission list PDF slots: live once data-pdf is set */
+  $$('.pdf-slot').forEach(function (a) {
+    var f = a.getAttribute('data-pdf');
+    if (f) { a.href = f; a.setAttribute('download', ''); }
+    else { a.removeAttribute('href'); a.setAttribute('aria-disabled', 'true'); a.textContent = 'PDF will be uploaded here'; }
+  });
+
   /* Print a checklist */
   $$('[data-print]').forEach(function (b) {
     b.addEventListener('click', function () { window.print(); });

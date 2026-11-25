@@ -434,6 +434,12 @@ details.q div{padding:0 16px 15px;color:var(--muted);font-size:15.5px;line-heigh
 .lists h2{font-size:26px;margin:9px 0 5px}
 .lists p{color:var(--muted);font-size:15px}
 .stat{display:inline-block;background:var(--sky);color:var(--blue);font-size:12.5px;font-weight:700;padding:3px 10px;border-radius:999px}
+.lists .pdf-slot{margin-top:14px}
+.pdf-slot[aria-disabled=true]{opacity:.6;pointer-events:none}
+.combo-grid{display:grid;gap:18px}
+.combo-h{font-size:22px;margin:0 0 8px}
+.ages.combo td:first-child{font-weight:700;white-space:nowrap;color:var(--blue)}
+.ages.combo td:last-child,.ages.combo th:last-child{text-align:left;font-weight:400;color:var(--ink,inherit)}
 
 /* About, campus and contact pages */
 .ticks li{position:relative;padding-left:26px;margin-bottom:8px}
@@ -520,6 +526,7 @@ a.sport:hover{transform:translateY(-3px)}
   .person{grid-template-columns:240px 1fr}
   .person>img{height:100%;max-height:none}
   .changes,.lists{grid-template-columns:repeat(3,1fr)}
+  .combo-grid{grid-template-columns:repeat(2,1fr)}
   .qlinks{grid-template-columns:repeat(3,1fr)}
   .check-grid,.fee-more{grid-template-columns:repeat(2,1fr)}
   :root{--gutter:24px}
