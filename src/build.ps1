@@ -99,7 +99,7 @@ foreach($kind in 'blog','news'){
     $posts.Add([pscustomobject]@{Kind=$kind;Slug=$slug;File="$kind-$slug.html";Path="/$kind-$slug";Title=[string]$mt.title;Date=$date;Category=$(if($mt.category){[string]$mt.category}else{ if($kind -eq 'blog'){'Parent Journal'}else{'News'} });Summary=[string]$mt.summary;Image=(Get-Src $mt.image);Alt=[string]$mt.image_alt;Featured=("$($mt.featured)" -eq 'true');Takeaways=@($mt.takeaways | Where-Object { $_ });Body=$fm.body;Minutes=[Math]::Max(1,[Math]::Ceiling($words/200))})
   }
 }
-$posts=@($posts | Sort-Object Date -Descending)
+$posts=@($posts | Sort-Object @{Expression='Date';Descending=$true},@{Expression='Kind';Descending=$false},@{Expression='Slug';Descending=$false})
 function Get-Card($p){
   $img= if($p.Image){ $p.Image } else { 'images/campus-wide-sm.jpg' }
   $alt= if($p.Alt){ Enc $p.Alt } else { '' }
@@ -151,7 +151,9 @@ $tocBlock      <a class="btn btn-gold btn-block" href="https://wa.me/?text=$shar
 
 # Every page to build: the templates in src/tpl plus one page per post
 $pages=New-Object Collections.Generic.List[object]
-foreach($file in (Get-ChildItem "$t/*.html" | Where-Object { $_.Name -notlike '_*' })){ $pages.Add([pscustomobject]@{Name=$file.Name;Content=[IO.File]::ReadAllText($file.FullName,$enc);Mod=$file.LastWriteTime}) }
+# Last-edited date for the sitemap: the last git commit that touched the page source (stable on any machine), else the file time
+function Get-Mod($file){ $d=$null; try { $d=(git -C "$s" log -1 --format=%cs -- "tpl/$($file.Name)" 2>$null) } catch {}; if($d){ [datetime]::ParseExact([string]$d,'yyyy-MM-dd',$inv) } else { $file.LastWriteTime } }
+foreach($file in (Get-ChildItem "$t/*.html" | Where-Object { $_.Name -notlike '_*' })){ $pages.Add([pscustomobject]@{Name=$file.Name;Content=[IO.File]::ReadAllText($file.FullName,$enc);Mod=(Get-Mod $file)}) }
 foreach($p in $posts){ $pages.Add([pscustomobject]@{Name=$p.File;Content=(Get-PostPage $p);Mod=$p.Date}) }
 # Lists of posts on the blog, news and home pages
 $blogPosts=@($posts | Where-Object { $_.Kind -eq 'blog' }); $newsPosts=@($posts | Where-Object { $_.Kind -eq 'news' })
@@ -248,10 +250,10 @@ foreach($pg in $pages){
   }
   if($c.Contains('<!--FAQSCHEMA-->')){
     $qs=[regex]::Matches($c,'<details class="q"(?: open)?><summary>(.*?)</summary><div>(.*?)</div></details>',[Text.RegularExpressions.RegexOptions]::Singleline) | ForEach-Object {
-      @{'@type'='Question';name=(Get-Text $_.Groups[1].Value);acceptedAnswer=@{'@type'='Answer';text=(Get-Text $_.Groups[2].Value)}}
+      [ordered]@{'@type'='Question';name=(Get-Text $_.Groups[1].Value);acceptedAnswer=[ordered]@{'@type'='Answer';text=(Get-Text $_.Groups[2].Value)}}
     }
     $tag=''
-    if($qs){ $tag='<script type="application/ld+json">'+(ConvertTo-JsonText @{'@context'='https://schema.org';'@type'='FAQPage';mainEntity=@($qs)})+'</script>' }
+    if($qs){ $tag='<script type="application/ld+json">'+(ConvertTo-JsonText ([ordered]@{'@context'='https://schema.org';'@type'='FAQPage';mainEntity=@($qs)}))+'</script>' }
     $c=$c.Replace("<!--FAQSCHEMA-->`n",$(if($tag){"$tag`n"}else{''})).Replace("<!--FAQSCHEMA-->`r`n",$(if($tag){"$tag`r`n"}else{''}))
   }
   $c=$c.Replace('<!--HEADER-->',$h).Replace('<!--FOOTER-->',$f)
