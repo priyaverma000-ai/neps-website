@@ -220,16 +220,47 @@
     });
   });
 
-  /* Virtual tour: the file loads only after a tap */
+  /* Virtual tour: the photo shows first. When the box scrolls into view the video loads and
+     plays silently on a loop over it. "Watch with sound" restarts it with sound and controls.
+     People who ask for reduced motion or data saving get the photo and a play button instead. */
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var saveData = navigator.connection && navigator.connection.saveData;
+  function tourVideo(box) {
+    var v = $('video', box);
+    if (!v) {
+      v = document.createElement('video');
+      v.muted = true; v.loop = true; v.playsInline = true; v.preload = 'auto';
+      v.setAttribute('muted', ''); v.setAttribute('playsinline', '');
+      v.setAttribute('aria-label', 'Campus tour video');
+      v.addEventListener('playing', function () {
+        box.classList.add('is-playing');
+        var l = $('.tour-lbl', box); if (l && v.muted) l.textContent = 'Watch with sound';
+      });
+      v.src = box.dataset.src;
+      box.insertBefore(v, $('button', box));
+    }
+    return v;
+  }
+  function tryPlay(v) { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
+  if (!reduceMotion && !saveData && 'IntersectionObserver' in window) {
+    $$('.tour[data-src]').forEach(function (box) {
+      new IntersectionObserver(function (es) {
+        es.forEach(function (en) {
+          var v = $('video', box);
+          if (en.isIntersecting) { v = tourVideo(box); if (v.muted) tryPlay(v); }
+          else if (v && v.muted) v.pause();
+        });
+      }, { threshold: 0.35 }).observe(box);
+    });
+  }
   function playTour(e) {
     var box = (e && e.currentTarget && e.currentTarget.closest('.tour')) || $('.tour[data-src]');
     if (!box) return;
     box.scrollIntoView({ block: 'center' });
-    if ($('video', box)) return;
-    var v = document.createElement('video');
-    v.src = box.dataset.src; v.controls = true; v.autoplay = true; v.playsInline = true;
-    box.appendChild(v);
-    var b = $('button', box); if (b) b.remove();
+    var v = tourVideo(box);
+    v.muted = false; v.loop = false; v.controls = true; v.currentTime = 0;
+    tryPlay(v);
+    box.classList.add('is-playing', 'has-sound');
     track('tour_play');
   }
   $$('[data-tour]').forEach(function (b) { b.addEventListener('click', playTour); });
