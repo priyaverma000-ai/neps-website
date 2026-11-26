@@ -185,6 +185,16 @@
     else { a.removeAttribute('href'); a.setAttribute('aria-disabled', 'true'); a.textContent = 'PDF will be uploaded here'; }
   });
 
+  /* Instagram reels: load the embeds only when the section comes near the screen */
+  var igFrames = $$('.ig-item iframe[data-src]');
+  if (igFrames.length) {
+    var loadIg = function () { igFrames.forEach(function (f) { if (!f.src) f.src = f.getAttribute('data-src'); }); };
+    if ('IntersectionObserver' in window) {
+      var igObs = new IntersectionObserver(function (es) { if (es.some(function (e) { return e.isIntersecting; })) { loadIg(); igObs.disconnect(); } }, { rootMargin: '400px 0px' });
+      igObs.observe(igFrames[0].closest('.ig-rail'));
+    } else { loadIg(); }
+  }
+
   /* Print a checklist */
   $$('[data-print]').forEach(function (b) {
     b.addEventListener('click', function () { window.print(); });

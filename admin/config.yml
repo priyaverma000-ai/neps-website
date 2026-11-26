@@ -52,6 +52,37 @@ collections:
       - {label: Hide this post (draft), name: draft, widget: boolean, default: false, required: false}
       - {label: Body, name: body, widget: markdown, buttons: [bold, italic, link, heading-two, heading-three, quote, bulleted-list, numbered-list], editor_components: [image]}
 
+  - name: home
+    label: Home page and press
+    description: The Instagram videos on the home page, and the media coverage shown on the home page and In the news.
+    files:
+      - name: instagram
+        label: Instagram videos (home page)
+        file: content/home-instagram.json
+        format: json
+        fields:
+          - {label: Section title, name: title, widget: string}
+          - {label: Reels (paste the link of each Instagram reel or post; the first ones show first), name: reels, widget: list, field: {label: Link, name: url, widget: string}}
+      - name: media
+        label: Media coverage
+        file: content/media-coverage.json
+        format: json
+        fields:
+          - {label: Featured in (publication names shown in a row on the home page), name: featured_in, widget: list, field: {label: Publication, name: name, widget: string}}
+          - label: Coverage
+            name: items
+            widget: list
+            summary: '{{fields.outlet}}: {{fields.headline}}'
+            fields:
+              - {label: Publication, name: outlet, widget: string}
+              - {label: Type, name: kind, widget: select, options: [Article, Feature, Interview, Webinar, Story, TV, Award]}
+              - {label: Date, name: date, widget: datetime, format: 'YYYY-MM-DD', date_format: 'DD MMM YYYY', time_format: false}
+              - {label: Headline, name: headline, widget: string}
+              - {label: Summary, name: summary, widget: text}
+              - {label: Link to the article, name: url, widget: string, required: false}
+              - {label: Who is featured, name: person, widget: select, required: false, options: ['', 'Rohit Chopra', 'Dr. Priti Ramendra', 'Mrs. Usha Chopra']}
+              - {label: Show on the home page, name: home, widget: boolean, default: true}
+
   - name: news
     label: School News
     label_singular: News item

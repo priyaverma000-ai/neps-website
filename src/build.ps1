@@ -156,6 +156,35 @@ foreach($p in $posts){ $pages.Add([pscustomobject]@{Name=$p.File;Content=(Get-Po
 # Lists of posts on the blog, news and home pages
 $blogPosts=@($posts | Where-Object { $_.Kind -eq 'blog' }); $newsPosts=@($posts | Where-Object { $_.Kind -eq 'news' })
 $feat=@($blogPosts | Where-Object { $_.Featured })[0]; if(-not $feat){ $feat=$blogPosts[0] }
+
+# Instagram reels on the home page (content/home-instagram.json, edited in /admin)
+$reelHtml=''; $igTitle='See school life on Instagram'
+if(Test-Path "$o/content/home-instagram.json"){
+  $ig=[IO.File]::ReadAllText("$o/content/home-instagram.json",$enc) | ConvertFrom-Json
+  if($ig.title){ $igTitle=[string]$ig.title }
+  $n=0; $reelHtml=(@($ig.reels) | ForEach-Object {
+    $m=[regex]::Match([string]$_,'instagram\.com/(?:[\w.]+/)?(reel|p)/([\w-]+)')
+    if($m.Success){ $n++; "    <div class=`"ig-item`"><iframe data-src=`"https://www.instagram.com/$($m.Groups[1].Value)/$($m.Groups[2].Value)/embed/`" title=`"New Era Public School on Instagram, video $n`" scrolling=`"no`" allowtransparency=`"true`"></iframe></div>" }
+  }) -join "`n"
+}
+# Media coverage on the home page and In the news (content/media-coverage.json, edited in /admin)
+$people=@{'Rohit Chopra'=@('lead-rohit-sm.jpg','Director');'Dr. Priti Ramendra'=@('lead-priti-sm.jpg','Head of School');'Mrs. Usha Chopra'=@('lead-usha-sm.jpg','Chairperson')}
+$media=$null; if(Test-Path "$o/content/media-coverage.json"){ $media=[IO.File]::ReadAllText("$o/content/media-coverage.json",$enc) | ConvertFrom-Json }
+function Get-MediaCard($it,[switch]$OnHome){
+  $d= try { ([datetime]::Parse([string]$it.date,$inv)).ToString('d MMM yyyy',$inv) } catch { [string]$it.date }
+  $head= if($it.url){ "<a href=`"$(Enc $it.url)`" rel=`"noopener`">$(Enc $it.headline)</a>" } else { Enc $it.headline }
+  $who=''; if($it.person -and $people[[string]$it.person]){ $pp=$people[[string]$it.person]; $who="<div class=`"m-who`"><img loading=`"lazy`" src=`"images/$($pp[0])`" alt=`"`" width=`"40`" height=`"40`"><span><b>$(Enc $it.person)</b>$($pp[1])</span></div>" }
+  if($OnHome){ "    <li class=`"m-card rv`"><span class=`"m-out`">$(Enc $it.outlet)</span><span class=`"m-meta`">$(Enc $it.kind) &middot; $d</span><h3>$head</h3><p>$(Enc $it.summary)</p>$who</li>" }
+  else { "    <li class=`"rv`"><span class=`"stat`">$(Enc $it.outlet) &middot; $d</span><h3>$head</h3><p>$(Enc $it.summary)</p>$who</li>" }
+}
+$mediaHome=''; $pressList=''
+if($media){
+  $all=@($media.items | Sort-Object { [string]$_.date } -Descending)
+  $strip=(@($media.featured_in) | ForEach-Object { "<li>$(Enc $_)</li>" }) -join ''
+  $cards=(@($all | Where-Object { "$($_.home)" -eq 'True' -or "$($_.home)" -eq 'true' } | Select-Object -First 4) | ForEach-Object { Get-MediaCard $_ -OnHome }) -join "`n"
+  $mediaHome="<section class=`"sec media-band`" id=`"media`"><div class=`"wrap`">`n  <div class=`"sec-head rv`"><span class=`"eyebrow`">In the media</span><h2 class=`"title`">New Era in the national press</h2><p class=`"lead`">Our leaders write and speak on skills, wellbeing and the future of school education.</p></div>`n  <ul class=`"m-strip rv`" aria-label=`"Featured in`">$strip</ul>`n  <ul class=`"m-grid`">`n$cards`n  </ul>`n  <p class=`"rv`" style=`"margin-top:20px`"><a class=`"link link-light`" href=`"in-the-news.html`">All media coverage &rarr;</a></p>`n</div></section>"
+  $pressList="  <ul class=`"press`">`n"+(($all | ForEach-Object { Get-MediaCard $_ }) -join "`n")+"`n  </ul>"
+}
 foreach($pg in $pages){
   if($pg.Name -eq 'blog.html'){
     $featHtml= if($feat){ "<a class=`"feat`" href=`"$($feat.File)`">`n      <img src=`"$(if($feat.Image){$feat.Image}else{'images/campus-wide.jpg'})`" alt=`"$(Enc $feat.Alt)`" fetchpriority=`"high`">`n      <div class=`"feat-b`">`n        <div class=`"meta`"><span class=`"cat`">$(Enc $feat.Category)</span>$($feat.Date.ToString('MMM yyyy',$inv)) &middot; $($feat.Minutes) min read</div>`n        <h2>$(Enc $feat.Title)</h2>`n        <p>$(Enc $feat.Summary)</p>`n      </div>`n    </a>" } else { '' }
@@ -164,7 +193,12 @@ foreach($pg in $pages){
     $pg.Content=$pg.Content.Replace('<!--BLOGFEAT-->',$featHtml).Replace('<!--BLOGCHIPS-->',$chips).Replace('<!--BLOGCARDS-->',(($blogPosts | ForEach-Object { '      '+(Get-Card $_) }) -join "`n"))
   }
   if($pg.Name -eq 'news.html'){ $pg.Content=$pg.Content.Replace('<!--NEWSCARDS-->',(($newsPosts | ForEach-Object { '    '+(Get-Card $_) }) -join "`n")) }
-  if($pg.Name -eq 'index.html'){ $pg.Content=$pg.Content.Replace('<!--HOMELATEST-->',((@($posts | Select-Object -First 3) | ForEach-Object { '    '+(Get-Card $_) }) -join "`n")) }
+  if($pg.Name -eq 'index.html'){
+    $pg.Content=$pg.Content.Replace('<!--HOMELATEST-->',((@($posts | Select-Object -First 3) | ForEach-Object { '    '+(Get-Card $_) }) -join "`n")).Replace('<!--MEDIACOVERAGE-->',$mediaHome)
+    $igSec= if($reelHtml){ "<section class=`"sec ig-sec`" id=`"instagram`"><div class=`"wrap`">`n  <div class=`"sec-head rv`"><span class=`"eyebrow`">@newerapublicschool.dwarka</span><h2 class=`"title`">$(Enc $igTitle)</h2></div>`n  <div class=`"ig-rail`" tabindex=`"0`" aria-label=`"Instagram videos, scroll sideways`">`n$reelHtml`n  </div>`n  <p class=`"rv`" style=`"margin-top:16px`"><a class=`"btn btn-ghost`" href=`"https://www.instagram.com/newerapublicschool.dwarka/`" rel=`"noopener`">Follow us on Instagram</a></p>`n</div></section>" } else { '' }
+    $pg.Content=$pg.Content.Replace('<!--INSTAREELS-->',$igSec)
+  }
+  if($pg.Name -eq 'in-the-news.html' -and $pressList){ $pg.Content=$pg.Content.Replace('<!--PRESSLIST-->',$pressList) }
 }
 # Remove pages of posts that were deleted or unpublished
 Get-ChildItem "$o/*.html" | Where-Object { $_.Name -match '^(blog|news)-.+\.html$' -and -not ($posts.File -contains $_.Name) } | Remove-Item
