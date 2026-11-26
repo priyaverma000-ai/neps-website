@@ -221,8 +221,8 @@
   });
 
   /* Virtual tour: the file loads only after a tap */
-  function playTour() {
-    var box = $('#tour');
+  function playTour(e) {
+    var box = (e && e.currentTarget && e.currentTarget.closest('.tour')) || $('.tour[data-src]');
     if (!box) return;
     box.scrollIntoView({ block: 'center' });
     if ($('video', box)) return;
