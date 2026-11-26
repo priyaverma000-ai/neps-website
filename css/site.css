@@ -440,6 +440,10 @@ details.q div{padding:0 16px 15px;color:var(--muted);font-size:15.5px;line-heigh
 .combo-h{font-size:22px;margin:0 0 8px}
 .ages.combo td:first-child{font-weight:700;white-space:nowrap;color:var(--blue)}
 .ages.combo td:last-child,.ages.combo th:last-child{text-align:left;font-weight:400;color:var(--ink,inherit)}
+.ages.pts td:nth-child(2){color:var(--muted);font-size:14.5px;padding-left:10px;padding-right:10px}
+.ages.pts tr.tot td{font-weight:800;border-top:2px solid var(--line)}
+.routes details.q div{font-size:15px}
+.fee-disc{margin-top:12px;background:var(--sky);border-radius:12px;padding:12px 14px}
 
 /* About, campus and contact pages */
 .ticks li{position:relative;padding-left:26px;margin-bottom:8px}

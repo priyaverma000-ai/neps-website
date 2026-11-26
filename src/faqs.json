@@ -27,7 +27,7 @@
  ["Can my child join Class I in 2027-28?", "2027-28 is a transition year. In the DoE table, Class I is filled by children promoted from KG in 2026-27, so please speak to the admission team about your child's case before registering."],
  ["Do the DoE age rules apply when changing schools?", "A child who has passed the previous class at a recognised school, with a valid School Leaving Certificate and mark sheet, is exempt from the age criteria for the next class."],
  ["What is the monthly fee for Class I to IX?", "In 2026-27 the monthly fee ranges from ₹8,431 to ₹11,650 depending on the class. A quarterly plan is also available."],
- ["Which documents are needed for Class I to IX admission?", "The School Leaving Certificate, the latest mark sheet or report card, the birth certificate, address proof and photographs."]
+ ["Which documents are needed for Class I to IX admission?", "The child's Aadhaar and birth certificate, both parents' Aadhaar cards, the final result of the last class and the SLC or Transfer Certificate. There is also an entrance test at New Era."]
 ]},
 "age-calculator.html": {"topic": "the school age calculator", "faq": [
  ["How is my child's class decided for 2027-28?", "By your child's age on 31 March 2027, under the DoE Delhi rules: Nursery 3+ up to 4, Lower KG 4+ up to 5, and Upper KG 5+ up to 6."],
@@ -35,13 +35,13 @@
  ["Is the birth date I enter saved anywhere?", "No. The calculator works in your browser and the date is not sent to the school unless you choose to message us."]
 ]},
 "admission-criteria.html": {"topic": "admission criteria", "faq": [
- ["How are admission seats decided at New Era Dwarka?", "Seats follow the school's published points criteria and the DoE rules. The points table for 2027-28 will be published on this page."],
+ ["How are admission seats decided at New Era Dwarka?", "By points, out of 100: distance from school (up to 30), girl child (30, boys 15), first child (10, second child 5), sibling in the school (20, otherwise 10) and alumni parent (10, otherwise 5). Ties go to a draw of lots."],
  ["Is there an age requirement for Nursery and KG?", "Yes. Your child must fit the class age on 31 March 2027: Nursery 3+, Lower KG 4+ and Upper KG 5+, with up to one month of relaxation allowed by the Head of School."],
  ["Where can I read the official DoE notice?", "The DoE circular on age of admission, dated 24 October 2025, is linked on this page, along with the Directorate of Education website."]
 ]},
 "admission-documents.html": {"topic": "admission documents", "faq": [
- ["What documents are needed for nursery admission?", "The child's birth certificate, recent photographs, address proof and the parents' identity documents."],
- ["What extra documents are needed for Class I and above?", "The School Leaving Certificate from the previous school and the latest mark sheet or report card."],
+ ["What documents are needed for nursery admission?", "The child's Aadhaar and birth certificate, both parents' Aadhaar cards, a caste certificate if applicable, and the I-Card and transport proformas."],
+ ["What extra documents are needed for Class I and above?", "The final result of the last class and the School Leaving Certificate or Transfer Certificate. Children joining Class I and above also take an entrance test at New Era."],
  ["Can I print the documents checklist?", "Yes. Use Print or save as PDF on this page, or share it on WhatsApp."]
 ]},
 "fee-structure.html": {"topic": "school fees", "faq": [
@@ -49,7 +49,9 @@
  ["How much is paid at the time of admission?", "On the monthly plan, the one-time admission fee of ₹7,196 plus the first month's fee, for example ₹17,412 for Nursery and LKG. The quarterly plan figures are shown in the table."],
  ["What does the school fee include?", "A/C charges in every class, a mid-day meal up to Class V, e-learning from Class I to X, and STEM and Robotics activities. Robotics kits are bought separately."],
  ["What is not included in the fee?", "Uniforms, books, school bags and outstation or educational tours. Sport beyond the regular school curriculum carries an additional charge."],
- ["Are school fees refundable?", "No. All fees paid are non-refundable and non-transferable."]
+ ["Are school fees refundable?", "No. All fees paid are non-refundable and non-transferable."],
+ ["Will fees change for 2027-28?", "Yes. The figures shown are for 2026-27. Fees for 2027-28 will be revised with an increase of 10% to 15%, and the final structure is shared at admission."],
+ ["How can I pay the school fee?", "Online only, through the school's Edunext fee portal. Fees are due by the 10th of the month."]
 ]},
 "admission-lists.html": {"topic": "admission lists", "faq": [
  ["When will the 2027-28 first admission list be published?", "On 20 January 2027, with the waiting list. A second list, if any, follows on 5 February 2027."],
@@ -63,7 +65,9 @@
 ]},
 "transport.html": {"topic": "school transport", "faq": [
  ["Does New Era Public School, Dwarka provide school bus transport?", "Yes. The charge depends on how far you live from the school in Sector 25."],
- ["How much does school transport cost?", "In 2026-27: ₹3,140 for 0 to 2 km, ₹3,890 for 2 to 5 km and ₹4,280 above 5 km."],
+ ["How much does school transport cost?", "In 2026-27, per month: ₹3,140 for 0 to 2 km, ₹3,890 for 2 to 5 km and ₹4,280 above 5 km."],
+ ["Which areas does the school bus cover?", "Ten routes cover Dwarka sectors, Uttam Nagar, Vikaspuri, Janakpuri, Hari Nagar, Sagarpur, Palam, Najafgarh, Bijwasan, Kapashera, Palam Vihar and Dwarka Expressway."],
+ ["Are the school buses safe?", "Every bus has GPS tracking and a female attendant, and drivers keep to speed limits."],
  ["Does the school bus cover my sector?", "Send your sector or area on WhatsApp to +91 98705 52633 and the team will confirm the route, pick-up point and timing."]
 ]},
 "why-new-era.html": {"topic": "choosing New Era", "faq": [
