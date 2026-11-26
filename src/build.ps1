@@ -8,8 +8,8 @@ $site='https://nepsdwarka.com'
 $inv=[Globalization.CultureInfo]::InvariantCulture
 function Part($n){ [IO.File]::ReadAllText("$t/_$n.html",$enc) }
 function Get-Text($html){ ([Net.WebUtility]::HtmlDecode(($html -replace '<[^>]+>','')) -replace '\s+',' ').Trim() }
-# Windows PowerShell escapes ' & < > as 0027 etc.; PowerShell 7 does not. Use the plain characters so both give the same output.
-function ConvertTo-JsonText($x){ ($x | ConvertTo-Json -Depth 8 -Compress).Replace('0027',"'").Replace('0026','&').Replace('003c','<').Replace('003e','>') }
+# Windows PowerShell writes ' & < > as backslash-u escapes (u0027, u0026, u003c, u003e); PowerShell 7 does not. Use the plain characters so both give the same output.
+function ConvertTo-JsonText($x){ $j=($x | ConvertTo-Json -Depth 8 -Compress); $u=[string][char]92+'u00'; $j.Replace($u+'27',[string][char]39).Replace($u+'26','&').Replace($u+'3c','<').Replace($u+'3e','>') }
 function Enc($x){ [Net.WebUtility]::HtmlEncode([string]$x) }
 $h=Part 'header'; $f=Part 'footer'; $head=Part 'head'; $enq=Part 'enquiry'; $calc=Part 'calc'; $nav=Part 'anav'; $tst=Part 'testimonials'
 # Page FAQs live in src/faqs.json: { "page.html": { "topic": "...", "faq": [[question, answer], ...] } }
