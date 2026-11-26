@@ -8,7 +8,8 @@ $site='https://nepsdwarka.com'
 $inv=[Globalization.CultureInfo]::InvariantCulture
 function Part($n){ [IO.File]::ReadAllText("$t/_$n.html",$enc) }
 function Get-Text($html){ ([Net.WebUtility]::HtmlDecode(($html -replace '<[^>]+>','')) -replace '\s+',' ').Trim() }
-function ConvertTo-JsonText($x){ $x | ConvertTo-Json -Depth 8 -Compress }
+# Windows PowerShell escapes ' & < > as 0027 etc.; PowerShell 7 does not. Use the plain characters so both give the same output.
+function ConvertTo-JsonText($x){ ($x | ConvertTo-Json -Depth 8 -Compress).Replace('0027',"'").Replace('0026','&').Replace('003c','<').Replace('003e','>') }
 function Enc($x){ [Net.WebUtility]::HtmlEncode([string]$x) }
 $h=Part 'header'; $f=Part 'footer'; $head=Part 'head'; $enq=Part 'enquiry'; $calc=Part 'calc'; $nav=Part 'anav'; $tst=Part 'testimonials'
 # Page FAQs live in src/faqs.json: { "page.html": { "topic": "...", "faq": [[question, answer], ...] } }
