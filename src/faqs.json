@@ -67,6 +67,7 @@
  ["Does New Era Public School, Dwarka provide school bus transport?", "Yes. The charge depends on how far you live from the school in Sector 25."],
  ["How much does school transport cost?", "In 2026-27, per month: ₹3,140 for 0 to 2 km, ₹3,890 for 2 to 5 km and ₹4,280 above 5 km."],
  ["Which areas does the school bus cover?", "Ten routes cover Dwarka sectors, Uttam Nagar, Vikaspuri, Janakpuri, Hari Nagar, Sagarpur, Palam, Najafgarh, Bijwasan, Kapashera, Palam Vihar and Dwarka Expressway."],
+ ["For how many months is transport charged?", "For 11 months a year, paid monthly. It cannot be stopped mid-session; if it is, the full session is charged."],
  ["Are the school buses safe?", "Every bus has GPS tracking and a female attendant, and drivers keep to speed limits."],
  ["Does the school bus cover my sector?", "Send your sector or area on WhatsApp to +91 98705 52633 and the team will confirm the route, pick-up point and timing."]
 ]},
@@ -104,10 +105,11 @@
 "results.html": {"topic": "board results", "faq": [
  ["Which board does New Era Public School, Dwarka follow?", "CBSE. New Era is a CBSE-affiliated senior secondary school, from Nursery to Class XII."],
  ["Which streams are offered in Class XI and XII?", "Science (Medical and Non-Medical), Commerce with or without Mathematics, and Humanities."],
+ ["What are New Era's recent board results?", "100% pass in Class X and XII in 2024 and 2025. In 2025, 97.62% of Class XII were placed in first division, and the Class X topper scored 97.2%."],
  ["How does the school support board exam students?", "With three science labs for practicals, MUN and debate, and an education fair where universities meet senior students."]
 ]},
 "reviews.html": {"topic": "parent reviews", "faq": [
- ["What do parents say about New Era Public School, Dwarka?", "Parent video stories and written reviews will appear on this page, recorded with each family's consent."],
+ ["What do parents say about New Era Public School, Dwarka?", "Parents share their stories in videos on this page and on the school's Instagram, recorded with each family's consent."],
  ["How can I share my family's New Era story?", "Send a message on WhatsApp to +91 98705 52633 and the team will set up a short chat."],
  ["Can I see the school before deciding?", "Yes. Book a campus visit to see the classrooms, labs and Sports Centre and meet the team."]
 ]},
@@ -157,6 +159,7 @@
 ]},
 "sports-achievements.html": {"topic": "sports achievements", "faq": [
  ["Which New Era students competed at national level in 2025-26?", "Kshitij Raj Sinha, Navya Yadav, Niraanjan Singh, Mehr Muralidass, Eshanya Khattar and Manshi Singh in lawn tennis, Vaasvi Rajput in shooting, Lavanya Attri in gymnastics, and Reyan Rawat at the Khelo India Youth Games."],
+ ["Who are New Era's state and national sports champions?", "Fifteen students in lawn tennis, shooting and gymnastics, including Mehr Muralidass, a six-time All India U-18 champion, Reyan Rawat, Khelo India bronze medallist, and Lavanya Attri, five golds at the Delhi State School Games 2026."],
  ["When was the New Era Sports Day in 2026?", "Sports Day, Udyatam 2026, was held on 31 October 2026."]
 ]},
 "facilities.html": {"topic": "school facilities", "faq": [
@@ -177,6 +180,7 @@
 "pre-primary.html": {"topic": "pre-primary school", "faq": [
  ["Which pre-primary classes does New Era Dwarka have?", "Nursery, Lower KG and Upper KG, for children aged 3 to 6."],
  ["Is lunch included for pre-primary children?", "Yes. A mid-day meal is part of the monthly fee."],
+ ["What is the teacher-child ratio in pre-primary?", "Class sizes and the teacher-child ratio follow DoE norms, and every Nursery, LKG and UKG class has its own mother teacher."],
  ["What do young children do at New Era?", "They learn through play in colourful classrooms, with a play area, a splash pool, yoga, trips and celebrations."]
 ]},
 "primary.html": {"topic": "the primary years", "faq": [
@@ -224,9 +228,11 @@
 ]},
 "alumni.html": {"topic": "the alumni network", "faq": [
  ["How do I join the New Era Dwarka alumni list?", "Send your name, batch and email on WhatsApp to +91 98705 52633."],
+ ["Where are New Era Dwarka alumni now?", "Doctors from medical colleges in Bihar and Bengal, engineers from IIIT-Delhi, Symbiosis and UPES, a product security engineer at VMware, a business analyst at IndiGo, an immigration officer with the Ministry of Home Affairs, a lawyer and a registered nurse in the USA, among others."],
  ["When was the last alumni meet?", "The Alumni Meet 2026 was held on campus on 1 November 2026."]
 ]},
 "in-the-news.html": {"topic": "news and media", "faq": [
+ ["Where has New Era Dwarka been in the news?", "In November 2026: The Hindu, India Today Insight and BW Education, on vocational learning, skill-based education and student wellbeing, plus The Hindu's career guidance webinar."],
  ["How can journalists contact New Era Public School, Dwarka?", "Email info@nepsdwarka.com with the subject Media enquiry."],
  ["Where can I see what is happening at school?", "Recent events are listed on this page and on the Events page."]
 ]},
