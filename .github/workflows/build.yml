@@ -1,0 +1,41 @@
+# Rebuilds the website when a blog post or news item is published from the /admin editor
+# (or when anyone pushes a change to content/ or images/uploads/). The built pages are committed
+# back to main, which GitHub Pages and the school's server then serve.
+name: Build site
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'content/**'
+      - 'images/uploads/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-site
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build pages
+        shell: pwsh
+        run: ./src/build.ps1
+
+      - name: Commit built pages
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "Nothing to commit"
+          else
+            git commit -m "Build site after content update [skip ci]"
+            git push
+          fi
