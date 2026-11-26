@@ -1,6 +1,8 @@
 /* New Era Public School, Dwarka: site behaviour. No libraries. */
 (function () {
   'use strict';
+  /* Show the hidden draft slots when the address has ?drafts=1 */
+  try { if (/[?&]drafts=1/.test(location.search)) document.documentElement.classList.add('show-drafts'); } catch (e) {}
   var SITE = {
     whatsapp: '919870552633',
     // Set this to the Edunext enquiry endpoint or a Google Sheet web app URL.

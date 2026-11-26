@@ -1,31 +1,185 @@
-# Builds the site: fills each src\tpl page with the shared partials (_head, _header, _footer...)
-# and writes the finished page to the site root. Run: powershell -File src\build.ps1
-$s= if($args[0]){$args[0]}else{$PSScriptRoot}; $o= if($args[1]){$args[1]}else{Split-Path $PSScriptRoot -Parent}; $t="$s\tpl"
+# Builds the site: fills each src/tpl page with the shared partials (_head, _header, _footer...),
+# turns the Markdown posts in content/blog and content/news into pages, and writes the finished
+# pages to the site root. Works in Windows PowerShell 5.1 and PowerShell 7 (Windows, Linux, macOS).
+# Run: powershell -File src/build.ps1   (or: pwsh src/build.ps1)
+$s= if($args[0]){$args[0]}else{$PSScriptRoot}; $o= if($args[1]){$args[1]}else{Split-Path $PSScriptRoot -Parent}; $t="$s/tpl"
 $enc=New-Object Text.UTF8Encoding $false
 $site='https://nepsdwarka.com'
-function Part($n){ [IO.File]::ReadAllText("$t\_$n.html",$enc) }
+$inv=[Globalization.CultureInfo]::InvariantCulture
+function Part($n){ [IO.File]::ReadAllText("$t/_$n.html",$enc) }
 function Get-Text($html){ ([Net.WebUtility]::HtmlDecode(($html -replace '<[^>]+>','')) -replace '\s+',' ').Trim() }
 function ConvertTo-JsonText($x){ $x | ConvertTo-Json -Depth 8 -Compress }
+function Enc($x){ [Net.WebUtility]::HtmlEncode([string]$x) }
 $h=Part 'header'; $f=Part 'footer'; $head=Part 'head'; $enq=Part 'enquiry'; $calc=Part 'calc'; $nav=Part 'anav'; $tst=Part 'testimonials'
-$pages=Get-ChildItem "$t\*.html" | Where-Object { $_.Name -notlike '_*' }
-# Page FAQs live in src\faqs.json: { "page.html": { "topic": "...", "faq": [[question, answer], ...] } }
-$faqs=[IO.File]::ReadAllText("$s\faqs.json",$enc) | ConvertFrom-Json
+# Page FAQs live in src/faqs.json: { "page.html": { "topic": "...", "faq": [[question, answer], ...] } }
+$faqs=[IO.File]::ReadAllText("$s/faqs.json",$enc) | ConvertFrom-Json
 function Get-FaqSection($entry){
   $items=foreach($qa in $entry.faq){ '    <details class="q"><summary>'+[Net.WebUtility]::HtmlEncode($qa[0])+'</summary><div>'+[Net.WebUtility]::HtmlEncode($qa[1])+'</div></details>' }
   "<section class=`"sec page-faq`"><div class=`"wrap slim`">`n  <div class=`"sec-head rv`"><span class=`"eyebrow`">FAQ</span><h2 class=`"title`">Questions about $([Net.WebUtility]::HtmlEncode($entry.topic))</h2></div>`n  <div class=`"qa rv`">`n"+($items -join "`n")+"`n  </div>`n</div></section>`n"
 }
 
-# First pass: each page's public address, so breadcrumbs and the sitemap can use it
-$pathOf=@{'index.html'='/';'blog.html'='/blog/';'blog-post.html'='/blog/why-sports-matter-in-school'}
-$sitemap=New-Object Collections.Generic.List[object]
-foreach($file in $pages){
-  $m=[regex]::Match([IO.File]::ReadAllText($file.FullName,$enc),'^<!--META (.*?)-->')
-  if($m.Success){ $v=$m.Groups[1].Value -split '\|\|' | ForEach-Object { $_.Trim() }; $pathOf[$file.Name]=$v[2]; if($v.Count -le 5){ $sitemap.Add(@($v[2],$file)) } }
-  elseif($pathOf[$file.Name]){ $sitemap.Add(@($pathOf[$file.Name],$file)) }
+# ---------------------------------------------------------------------------------------------
+# Blog and news posts: Markdown files with a front matter block, written in the /admin editor
+# (Decap CMS) or by hand. content/blog/<slug>.md -> blog-<slug>.html, content/news/<slug>.md -> news-<slug>.html
+# ---------------------------------------------------------------------------------------------
+function Read-FrontMatter([string]$raw){
+  $raw=$raw.Replace("`r`n","`n"); $meta=@{}; $body=$raw
+  $m=[regex]::Match($raw,'^---\n(.*?)\n---\n?(.*)$',[Text.RegularExpressions.RegexOptions]::Singleline)
+  if($m.Success){
+    $body=$m.Groups[2].Value; $lines=$m.Groups[1].Value -split "`n"; $key=$null; $block=$null; $buf=@()
+    foreach($ln in $lines){
+      if($block -and ($ln -match '^\s+\S' -or $ln -eq '')){ $buf+=$ln.Trim(); continue }
+      if($block){ $meta[$key]= if($block -like '|*'){ $buf -join "`n" } else { ($buf -join ' ').Trim() }; $block=$null; $buf=@() }
+      if($ln -match '^\s+-\s*(.*)$' -and $key){ if($meta[$key] -isnot [Collections.ArrayList]){ $meta[$key]=New-Object Collections.ArrayList }; [void]$meta[$key].Add((Get-Plain $Matches[1])); continue }
+      if($ln -match '^([A-Za-z_][\w-]*):\s*(.*)$'){
+        $key=$Matches[1]; $v=$Matches[2].Trim()
+        if($v -match '^[>|][-+]?$'){ $block=$v; $buf=@() } elseif($v -eq ''){ $meta[$key]=$null } else { $meta[$key]=Get-Plain $v }
+      }
+    }
+    if($block){ $meta[$key]= if($block -like '|*'){ $buf -join "`n" } else { ($buf -join ' ').Trim() } }
+  }
+  @{meta=$meta;body=$body}
+}
+function Get-Plain([string]$v){
+  $v=$v.Trim()
+  if($v.Length -ge 2 -and $v.StartsWith('"') -and $v.EndsWith('"')){ return $v.Substring(1,$v.Length-2).Replace('\"','"').Replace('\\','\') }
+  if($v.Length -ge 2 -and $v.StartsWith("'") -and $v.EndsWith("'")){ return $v.Substring(1,$v.Length-2).Replace("''","'") }
+  $v
+}
+function Get-Slug([string]$x){ (($x.ToLower() -replace '[^a-z0-9]+','-').Trim('-')) }
+function Get-Src([string]$x){ if(-not $x){ return '' }; $x=$x.Trim(); if($x -match '^https?://'){ $x } else { $x.TrimStart('/') } }
+function ConvertTo-Inline([string]$x){
+  $x=Enc $x
+  $x=[regex]::Replace($x,'!\[([^\]]*)\]\(([^)\s]+)\)',{ param($m) "<img loading=`"lazy`" src=`"$(Get-Src $m.Groups[2].Value)`" alt=`"$($m.Groups[1].Value)`">" })
+  $x=[regex]::Replace($x,'\[([^\]]+)\]\(([^)\s]+)\)',{ param($m) $u=$m.Groups[2].Value; if($u.StartsWith('/') -and -not $u.StartsWith('//')){ $u=$u.TrimStart('/') }; "<a href=`"$u`">$($m.Groups[1].Value)</a>" })
+  $x=[regex]::Replace($x,'\*\*(.+?)\*\*','<strong>$1</strong>')
+  $x=[regex]::Replace($x,'(?<![\*\w])\*(?=\S)(.+?)(?<=\S)\*(?!\*)','<em>$1</em>')
+  $x=[regex]::Replace($x,'`([^`]+)`','<code>$1</code>')
+  $x
+}
+function ConvertFrom-Md([string]$md){
+  $out=New-Object Collections.Generic.List[string]; $mode=''; $buf=New-Object Collections.Generic.List[string]
+  $flush={
+    if($buf.Count){
+      switch($mode){
+        'p'     { $out.Add('<p>'+(ConvertTo-Inline (($buf -join ' ').Trim()))+'</p>') }
+        'ul'    { $out.Add('<ul class="tick">'+(($buf | ForEach-Object { '<li>'+(ConvertTo-Inline $_)+'</li>' }) -join '')+'</ul>') }
+        'ol'    { $out.Add('<ol class="tick" style="list-style:decimal;padding-left:22px">'+(($buf | ForEach-Object { '<li>'+(ConvertTo-Inline $_)+'</li>' }) -join '')+'</ol>') }
+        'quote' { $out.Add('<p class="pull">'+(ConvertTo-Inline (($buf -join ' ').Trim()))+'</p>') }
+        'raw'   { $out.Add($buf -join "`n") }
+      }
+    }
+    $buf.Clear(); Set-Variable -Name mode -Value '' -Scope 1
+  }
+  foreach($ln in ($md.Replace("`r`n","`n") -split "`n")){
+    if($mode -eq 'raw' -and $ln.Trim() -ne ''){ $buf.Add($ln); continue }
+    if($ln.Trim() -eq ''){ & $flush; continue }
+    if($ln -match '^(#{2,4})\s+(.+?)\s*#*$'){ & $flush; $n=$Matches[1].Length; $txt=$Matches[2]; $id=Get-Slug (Get-Text (ConvertTo-Inline $txt)); $out.Add("<h$n id=`"$id`">$(ConvertTo-Inline $txt)</h$n>"); continue }
+    if($ln -match '^#\s+(.+)$'){ & $flush; $out.Add("<h2>$(ConvertTo-Inline $Matches[1])</h2>"); continue }
+    if($ln -match '^\s*!\[([^\]]*)\]\(([^)\s]+)\)\s*$'){ & $flush; $alt=Enc $Matches[1]; $out.Add("<figure><img loading=`"lazy`" src=`"$(Get-Src $Matches[2])`" alt=`"$alt`">$(if($alt){"<figcaption>$alt</figcaption>"})</figure>"); continue }
+    if($ln -match '^\s{0,3}[-*+]\s+(.*)$'){ if($mode -ne 'ul'){ & $flush; $mode='ul' }; $buf.Add($Matches[1]); continue }
+    if($ln -match '^\s{0,3}\d+[.)]\s+(.*)$'){ if($mode -ne 'ol'){ & $flush; $mode='ol' }; $buf.Add($Matches[1]); continue }
+    if($ln -match '^>\s?(.*)$'){ if($mode -ne 'quote'){ & $flush; $mode='quote' }; $buf.Add($Matches[1]); continue }
+    if($ln -match '^\s*<' -and $mode -eq ''){ $mode='raw'; $buf.Add($ln); continue }
+    if(($mode -eq 'ul' -or $mode -eq 'ol') -and $ln -match '^\s{2,}\S'){ $buf[$buf.Count-1]+=' '+$ln.Trim(); continue }
+    if($mode -ne 'p'){ & $flush; $mode='p' }; $buf.Add($ln.Trim())
+  }
+  & $flush
+  $out -join "`n"
+}
+$posts=New-Object Collections.Generic.List[object]
+foreach($kind in 'blog','news'){
+  $dir="$o/content/$kind"; if(-not (Test-Path $dir)){ continue }
+  foreach($md in (Get-ChildItem "$dir/*.md")){
+    $fm=Read-FrontMatter ([IO.File]::ReadAllText($md.FullName,$enc)); $mt=$fm.meta
+    if(-not $mt.title -or ("$($mt.draft)" -eq 'true')){ continue }
+    $slug=Get-Slug $md.BaseName
+    $date= try { [datetime]::Parse([string]$mt.date,$inv) } catch { $md.LastWriteTime }
+    $words=([regex]::Matches($fm.body,'\w+')).Count
+    $posts.Add([pscustomobject]@{Kind=$kind;Slug=$slug;File="$kind-$slug.html";Path="/$kind-$slug";Title=[string]$mt.title;Date=$date;Category=$(if($mt.category){[string]$mt.category}else{ if($kind -eq 'blog'){'Parent Journal'}else{'News'} });Summary=[string]$mt.summary;Image=(Get-Src $mt.image);Alt=[string]$mt.image_alt;Featured=("$($mt.featured)" -eq 'true');Takeaways=@($mt.takeaways | Where-Object { $_ });Body=$fm.body;Minutes=[Math]::Max(1,[Math]::Ceiling($words/200))})
+  }
+}
+$posts=@($posts | Sort-Object Date -Descending)
+function Get-Card($p){
+  $img= if($p.Image){ $p.Image } else { 'images/campus-wide-sm.jpg' }
+  $alt= if($p.Alt){ Enc $p.Alt } else { '' }
+  "<a class=`"post rv`" data-cat=`"$(Get-Slug $p.Category)`" href=`"$($p.File)`"><img loading=`"lazy`" src=`"$img`" alt=`"$alt`" width=`"800`" height=`"500`"><div class=`"post-b`"><div class=`"meta`"><span class=`"cat`">$(Enc $p.Category)</span>$($p.Date.ToString('d MMM yyyy',$inv))</div><h3>$(Enc $p.Title)</h3>$(if($p.Summary){"<p>$(Enc $p.Summary)</p>"})</div></a>"
+}
+function Get-PostPage($p){
+  $isBlog=$p.Kind -eq 'blog'
+  $section= if($isBlog){ @('blog.html','Parent Journal') } else { @('news.html','News') }
+  $ogImg= if($p.Image -and $p.Image -like 'images/*'){ $p.Image.Substring(7) } else { 'campus-wide.jpg' }
+  $bodyHtml=ConvertFrom-Md $p.Body
+  $toc=[regex]::Matches($bodyHtml,'<h2 id="([^"]+)">(.*?)</h2>') | ForEach-Object { "        <a href=`"#$($_.Groups[1].Value)`">$($_.Groups[2].Value)</a>" }
+  $long=$p.Date.ToString('d MMMM yyyy',$inv)
+  $cover= if($p.Image){ "  <div class=`"acover`"><img src=`"$($p.Image)`" alt=`"$(Enc $p.Alt)`" fetchpriority=`"high`"></div>`n" } else { '' }
+  $take= if($p.Takeaways.Count){ "      <div class=`"takeaway`">`n        <h2>In short</h2>`n        <ul class=`"tick`">"+(($p.Takeaways | ForEach-Object { "<li>$(ConvertTo-Inline $_)</li>" }) -join '')+"</ul>`n      </div>`n" } else { '' }
+  $ld=[ordered]@{'@context'='https://schema.org';'@type'=$(if($isBlog){'BlogPosting'}else{'NewsArticle'});headline=$p.Title;datePublished=$p.Date.ToString('yyyy-MM-dd');dateModified=$p.Date.ToString('yyyy-MM-dd');inLanguage='en-IN';image="$site/images/$ogImg";author=[ordered]@{'@type'='Organization';name='New Era Public School, Dwarka';url="$site/"};publisher=[ordered]@{'@type'='Organization';name='New Era Public School, Dwarka';logo=[ordered]@{'@type'='ImageObject';url="$site/images/logo-full.png"}};mainEntityOfPage="$site$($p.Path)"}
+  $share=[uri]::EscapeDataString("$($p.Title): $site$($p.Path)")
+  $desc= if($p.Summary){ $p.Summary } else { $p.Title }
+  $tocBlock= if($toc){ "      <div class=`"card toc`">`n        <h3>In this article</h3>`n"+($toc -join "`n")+"`n      </div>`n" } else { '' }
+@"
+<!--META $(Enc $p.Title) | NEPS Dwarka||$(Enc $desc)||$($p.Path)||$ogImg||$(Enc $p.Title)-->
+<div class="progress" aria-hidden="true"></div>
+<main id="main">
+<script type="application/ld+json">$(ConvertTo-JsonText $ld)</script>
+<header class="ahead"><div class="wrap">
+  <p class="crumbs"><a href="index.html">Home</a> / <a href="$($section[0])">$($section[1])</a></p>
+  <h1>$(Enc $p.Title)</h1>
+  <div class="meta"><span class="cat">$(Enc $p.Category)</span>$long &middot; $($p.Minutes) min read</div>
+</div></header>
+<div class="wrap">
+$cover  <div class="alayout">
+    <article class="prose">
+$take$bodyHtml
+      <div class="inline-cta">
+        <h3>See New Era for yourself</h3>
+        <p>Walk the campus with our team, and bring your questions.</p>
+        <div class="row"><button class="btn btn-gold" data-open="visit">Book a Campus Visit</button><a class="btn btn-light" href="admissions.html">Admissions 2027-28</a></div>
+      </div>
+      <div class="author"><img src="images/logo-mark.png" alt="" width="56" height="49"><div><b>New Era Editorial Team</b>New Era Public School, Dwarka</div></div>
+    </article>
+    <aside class="side aside-sticky">
+$tocBlock      <a class="btn btn-gold btn-block" href="https://wa.me/?text=$share" data-loc="share">Share on WhatsApp</a>
+      <a class="btn btn-ghost btn-block" style="margin-top:10px" href="$($section[0])">More from $($section[1]) &rarr;</a>
+    </aside>
+  </div>
+</div>
+</main>
+"@
 }
 
-foreach($file in $pages){
-  $p=$file.Name; $c=[IO.File]::ReadAllText($file.FullName,$enc)
+# Every page to build: the templates in src/tpl plus one page per post
+$pages=New-Object Collections.Generic.List[object]
+foreach($file in (Get-ChildItem "$t/*.html" | Where-Object { $_.Name -notlike '_*' })){ $pages.Add([pscustomobject]@{Name=$file.Name;Content=[IO.File]::ReadAllText($file.FullName,$enc);Mod=$file.LastWriteTime}) }
+foreach($p in $posts){ $pages.Add([pscustomobject]@{Name=$p.File;Content=(Get-PostPage $p);Mod=$p.Date}) }
+# Lists of posts on the blog, news and home pages
+$blogPosts=@($posts | Where-Object { $_.Kind -eq 'blog' }); $newsPosts=@($posts | Where-Object { $_.Kind -eq 'news' })
+$feat=@($blogPosts | Where-Object { $_.Featured })[0]; if(-not $feat){ $feat=$blogPosts[0] }
+foreach($pg in $pages){
+  if($pg.Name -eq 'blog.html'){
+    $featHtml= if($feat){ "<a class=`"feat`" href=`"$($feat.File)`">`n      <img src=`"$(if($feat.Image){$feat.Image}else{'images/campus-wide.jpg'})`" alt=`"$(Enc $feat.Alt)`" fetchpriority=`"high`">`n      <div class=`"feat-b`">`n        <div class=`"meta`"><span class=`"cat`">$(Enc $feat.Category)</span>$($feat.Date.ToString('MMM yyyy',$inv)) &middot; $($feat.Minutes) min read</div>`n        <h2>$(Enc $feat.Title)</h2>`n        <p>$(Enc $feat.Summary)</p>`n      </div>`n    </a>" } else { '' }
+    $cats=@($blogPosts | ForEach-Object { $_.Category } | Select-Object -Unique)
+    $chips=(@('<button class="chip" data-filter="all" aria-pressed="true">All</button>')+($cats | ForEach-Object { "<button class=`"chip`" data-filter=`"$(Get-Slug $_)`" aria-pressed=`"false`">$(Enc $_)</button>" })) -join "`n  "
+    $pg.Content=$pg.Content.Replace('<!--BLOGFEAT-->',$featHtml).Replace('<!--BLOGCHIPS-->',$chips).Replace('<!--BLOGCARDS-->',(($blogPosts | ForEach-Object { '      '+(Get-Card $_) }) -join "`n"))
+  }
+  if($pg.Name -eq 'news.html'){ $pg.Content=$pg.Content.Replace('<!--NEWSCARDS-->',(($newsPosts | ForEach-Object { '    '+(Get-Card $_) }) -join "`n")) }
+  if($pg.Name -eq 'index.html'){ $pg.Content=$pg.Content.Replace('<!--HOMELATEST-->',((@($posts | Select-Object -First 3) | ForEach-Object { '    '+(Get-Card $_) }) -join "`n")) }
+}
+# Remove pages of posts that were deleted or unpublished
+Get-ChildItem "$o/*.html" | Where-Object { $_.Name -match '^(blog|news)-.+\.html$' -and -not ($posts.File -contains $_.Name) } | Remove-Item
+
+# First pass: each page's public address, so breadcrumbs and the sitemap can use it
+$pathOf=@{'index.html'='/';'blog.html'='/blog'}
+$sitemap=New-Object Collections.Generic.List[object]
+foreach($pg in $pages){
+  $m=[regex]::Match($pg.Content,'^<!--META (.*?)-->')
+  if($m.Success){ $v=$m.Groups[1].Value -split '\|\|' | ForEach-Object { $_.Trim() }; $pathOf[$pg.Name]=$v[2]; if($v.Count -le 5){ $sitemap.Add(@($v[2],$pg)) } }
+  elseif($pathOf[$pg.Name]){ $sitemap.Add(@($pathOf[$pg.Name],$pg)) }
+}
+
+foreach($pg in $pages){
+  $p=$pg.Name; $c=$pg.Content
   $m=[regex]::Match($c,'^<!--META (.*?)-->\r?\n',[Text.RegularExpressions.RegexOptions]::Singleline)
   if($m.Success){
     # title || description || canonical path || og image || breadcrumb name || optional robots
@@ -37,7 +191,7 @@ foreach($file in $pages){
     if($cm.Success){
       foreach($a in [regex]::Matches($cm.Groups[1].Value,'<a href="([^"]+)">(.*?)</a>')){ $href=$a.Groups[1].Value; if($href -ne 'index.html' -and $pathOf[$href]){ $trail+=,@((Get-Text $a.Groups[2].Value),($site+$pathOf[$href])) } }
     }
-    $trail+=,@($v[4],$url)
+    $trail+=,@((Get-Text $v[4]),$url)
     $i=0; $items=foreach($x in $trail){ $i++; [ordered]@{'@type'='ListItem';position=$i;name=$x[0];item=$x[1]} }
     $graph=[ordered]@{'@context'='https://schema.org';'@graph'=@(
       [ordered]@{'@type'='WebPage';'@id'="$url#webpage";url=$url;name=(Get-Text $v[0]);description=(Get-Text $v[1]);inLanguage='en-IN';isPartOf=@{'@id'="$site/#website"};about=@{'@id'="$site/#school"};primaryImageOfPage="$site/images/$($v[3])"},
@@ -67,8 +221,10 @@ foreach($file in $pages){
     $c=$c.Replace("<!--FAQSCHEMA-->`n",$(if($tag){"$tag`n"}else{''})).Replace("<!--FAQSCHEMA-->`r`n",$(if($tag){"$tag`r`n"}else{''}))
   }
   $c=$c.Replace('<!--HEADER-->',$h).Replace('<!--FOOTER-->',$f)
-  [IO.File]::WriteAllText("$o\$p",$c,$enc); "built $p $([math]::Round($c.Length/1KB))KB"
+  # The 404 page can be shown at any depth (/a/b/c), so point its relative links at the site root
+  if($p -eq '404.html'){ $c=$c.Replace("<head>`n","<head>`n<script>document.write('<base href=`"'+(/github\.io$/.test(location.hostname)?'/'+location.pathname.split('/')[1]+'/':'/')+'`">')</script>`n") }
+  [IO.File]::WriteAllText("$o/$p",$c,$enc); "built $p $([math]::Round($c.Length/1KB))KB"
 }
 # Sitemap, with each page's last-edited date
-$sm='<?xml version="1.0" encoding="UTF-8"?>'+"`n"+'<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+"`n"+(($sitemap | Sort-Object { $_[0] } | ForEach-Object { "  <url><loc>$site$($_[0])</loc><lastmod>$($_[1].LastWriteTime.ToString('yyyy-MM-dd'))</lastmod></url>" }) -join "`n")+"`n</urlset>`n"
-[IO.File]::WriteAllText("$o\sitemap.xml",$sm,$enc); "sitemap: $($sitemap.Count) pages"
+$sm='<?xml version="1.0" encoding="UTF-8"?>'+"`n"+'<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+"`n"+(($sitemap | Sort-Object { $_[0] } | ForEach-Object { "  <url><loc>$site$($_[0])</loc><lastmod>$($_[1].Mod.ToString('yyyy-MM-dd'))</lastmod></url>" }) -join "`n")+"`n</urlset>`n"
+[IO.File]::WriteAllText("$o/sitemap.xml",$sm,$enc); "sitemap: $($sitemap.Count) pages, $($posts.Count) posts"

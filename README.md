@@ -2,7 +2,9 @@
 
 A mobile-first redesign of [nepsdwarka.com](https://nepsdwarka.com), built as plain HTML, CSS and JavaScript with no frameworks.
 
-**Status: draft.** Pages marked `DRAFT SLOT` still need facts from the school, such as seats, points, board results, parent reviews and safety details. The full list is in the revamp plan document. Don't point nepsdwarka.com at this site until those slots are filled.
+**Deploying it?** Read [DEPLOY.md](DEPLOY.md): hosting options, the go-live checklist, the blog and news editor, and the content still to come.
+
+Unfilled sections are marked `DRAFT SLOT` in `src/tpl` and are hidden on the site. Add `?drafts=1` to a page address to see them.
 
 ## What's here
 
@@ -17,11 +19,15 @@ A mobile-first redesign of [nepsdwarka.com](https://nepsdwarka.com), built as pl
 | `src/tpl/` | Page sources. Files starting with `_` are shared parts: head, header, footer, enquiry band, admissions tabs, age calculator |
 | `src/build.ps1` | Builds every page from `src/tpl` into the site root and writes `sitemap.xml` |
 | `src/serve.ps1` | Local preview at http://localhost:8765 |
+| `content/blog`, `content/news` | Blog posts and news items in Markdown, edited at `/admin/` (Decap CMS) |
+| `admin/` | The blog and news editor and its settings |
+| `.github/workflows/build.yml` | Rebuilds the pages when a post is published |
+| `.htaccess`, `deploy/` | Server rules (Apache and Nginx) and the production robots.txt |
 
 ## Editing a page
 
 1. Edit the page in `src/tpl` (for example `src/tpl/admissions.html`). Edit `_header.html` or `_footer.html` to change every page at once.
-2. Rebuild: `powershell -ExecutionPolicy Bypass -File src\build.ps1`
+2. Rebuild: `powershell -ExecutionPolicy Bypass -File src/build.ps1` (or `pwsh src/build.ps1` on Linux and macOS)
 3. Preview: `powershell -ExecutionPolicy Bypass -File src\serve.ps1`, then open http://localhost:8765
 4. Commit and push. GitHub Pages republishes in about a minute.
 

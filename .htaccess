@@ -1,0 +1,42 @@
+# Apache settings for nepsdwarka.com (ignored by GitHub Pages). Nginx users: see deploy/nginx.conf
+Options -MultiViews -Indexes
+DirectoryIndex index.html
+ErrorDocument 404 /404.html
+AddDefaultCharset UTF-8
+
+<IfModule mod_rewrite.c>
+RewriteEngine On
+
+# Always use https and the bare domain
+RewriteCond %{HTTPS} off [OR]
+RewriteCond %{HTTP_HOST} ^www\. [NC]
+RewriteRule ^ https://nepsdwarka.com%{REQUEST_URI} [R=301,L]
+
+# Keep source and version-control folders private
+RewriteRule ^(\.git|src|deploy|content|\.github)(/|$) - [F,L]
+
+# Old blog addresses (nepsdwarka.com/blog/<post>) move to the new pages
+RewriteRule ^blog/?$ /blog [R=301,L]
+RewriteRule ^blog/([A-Za-z0-9-]+)/?$ /blog-$1 [R=301,L]
+RewriteRule ^news/([A-Za-z0-9-]+)/?$ /news-$1 [R=301,L]
+
+# Addresses without .html: /fee-structure serves fee-structure.html
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.html -f
+RewriteRule ^(.+?)/?$ $1.html [L]
+</IfModule>
+
+<IfModule mod_expires.c>
+ExpiresActive On
+ExpiresByType text/html "access plus 10 minutes"
+ExpiresByType text/css "access plus 7 days"
+ExpiresByType application/javascript "access plus 7 days"
+ExpiresByType image/jpeg "access plus 30 days"
+ExpiresByType image/png "access plus 30 days"
+ExpiresByType video/mp4 "access plus 30 days"
+</IfModule>
+
+<IfModule mod_deflate.c>
+AddOutputFilterByType DEFLATE text/html text/css application/javascript application/json image/svg+xml text/xml
+</IfModule>

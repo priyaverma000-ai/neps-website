@@ -1,0 +1,74 @@
+# Decap CMS settings for the New Era website editor (open /admin/ on the website).
+# Editors sign in with a GitHub account that has write access to the repository.
+# Every "Publish" saves a Markdown file in content/ and the GitHub Action rebuilds the pages.
+# See DEPLOY.md, section 4, for the one-time login setup.
+
+backend:
+  name: github
+  repo: priyaverma000-ai/neps-website   # change if the repository moves to the school's GitHub account
+  branch: main
+  # GitHub login needs a small OAuth helper. Put its address here (DEPLOY.md, section 4):
+  # base_url: https://YOUR-OAUTH-HELPER.example.com
+  commit_messages:
+    create: 'Add {{collection}} "{{slug}}"'
+    update: 'Update {{collection}} "{{slug}}"'
+    delete: 'Delete {{collection}} "{{slug}}"'
+    uploadMedia: 'Upload "{{path}}"'
+    deleteMedia: 'Delete "{{path}}"'
+
+# Lets developers edit locally without GitHub: run "npx decap-server" in the repository, then open /admin/
+local_backend: true
+
+site_url: https://nepsdwarka.com
+display_url: https://nepsdwarka.com
+media_folder: images/uploads
+public_folder: /images/uploads
+publish_mode: simple
+slug:
+  encoding: ascii
+  clean_accents: true
+
+collections:
+  - name: blog
+    label: Parent Journal (blog)
+    label_singular: Blog post
+    description: Articles for parents. Each post becomes its own page and appears on the blog and the home page.
+    folder: content/blog
+    create: true
+    slug: '{{slug}}'
+    extension: md
+    format: frontmatter
+    sortable_fields: [date, title, category]
+    summary: '{{title}}  ({{date}})'
+    fields:
+      - {label: Title, name: title, widget: string}
+      - {label: Publish date, name: date, widget: datetime, format: 'YYYY-MM-DD', date_format: 'DD MMM YYYY', time_format: false}
+      - {label: Category, name: category, widget: select, options: [Admissions, Parenting, Sports, Wellbeing, Future skills, Student voices, Campus life]}
+      - {label: Summary (one or two lines, shown on cards and in Google), name: summary, widget: text}
+      - {label: Cover image, name: image, widget: image, required: false}
+      - {label: Cover image description (for screen readers), name: image_alt, widget: string, required: false}
+      - {label: Feature at the top of the blog page, name: featured, widget: boolean, default: false, required: false}
+      - {label: Key points ("In short" box), name: takeaways, widget: list, required: false, field: {label: Point, name: point, widget: string}}
+      - {label: Hide this post (draft), name: draft, widget: boolean, default: false, required: false}
+      - {label: Body, name: body, widget: markdown, buttons: [bold, italic, link, heading-two, heading-three, quote, bulleted-list, numbered-list], editor_components: [image]}
+
+  - name: news
+    label: School News
+    label_singular: News item
+    description: News, events and announcements. Each item becomes its own page and appears on the News and home pages.
+    folder: content/news
+    create: true
+    slug: '{{slug}}'
+    extension: md
+    format: frontmatter
+    sortable_fields: [date, title, category]
+    summary: '{{title}}  ({{date}})'
+    fields:
+      - {label: Title, name: title, widget: string}
+      - {label: Date, name: date, widget: datetime, format: 'YYYY-MM-DD', date_format: 'DD MMM YYYY', time_format: false}
+      - {label: Category, name: category, widget: select, options: [Admissions, Events, Achievements, Sports, Academics, Announcements, In the media]}
+      - {label: Summary (one or two lines, shown on cards and in Google), name: summary, widget: text}
+      - {label: Cover image, name: image, widget: image, required: false}
+      - {label: Cover image description (for screen readers), name: image_alt, widget: string, required: false}
+      - {label: Hide this item (draft), name: draft, widget: boolean, default: false, required: false}
+      - {label: Body, name: body, widget: markdown, buttons: [bold, italic, link, heading-two, heading-three, quote, bulleted-list, numbered-list], editor_components: [image]}

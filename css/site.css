@@ -657,3 +657,7 @@ a.sport:hover{transform:translateY(-3px)}
   .poster-grid{grid-template-columns:repeat(4,1fr)}
 }
 @media (min-width:1000px){ .alum-grid{grid-template-columns:repeat(3,1fr)} .press{grid-template-columns:repeat(2,1fr)} }
+
+/* Draft slots are hidden on the live site. Add ?drafts=1 to any page address to see them. */
+.draft{display:none!important}
+.show-drafts .draft{display:block!important}
