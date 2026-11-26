@@ -263,5 +263,5 @@ foreach($pg in $pages){
   [IO.File]::WriteAllText("$o/$p",$c,$enc); "built $p $([math]::Round($c.Length/1KB))KB"
 }
 # Sitemap, with each page's last-edited date
-$sm='<?xml version="1.0" encoding="UTF-8"?>'+"`n"+'<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+"`n"+(($sitemap | Sort-Object { $_[0] } | ForEach-Object { "  <url><loc>$site$($_[0])</loc><lastmod>$($_[1].Mod.ToString('yyyy-MM-dd'))</lastmod></url>" }) -join "`n")+"`n</urlset>`n"
+$sm='<?xml version="1.0" encoding="UTF-8"?>'+"`n"+'<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+"`n"+(($sitemap | Sort-Object { ((([string]$_[0]).ToCharArray() | ForEach-Object { '{0:D5}' -f [int]$_ }) -join '') } | ForEach-Object { "  <url><loc>$site$($_[0])</loc><lastmod>$($_[1].Mod.ToString('yyyy-MM-dd'))</lastmod></url>" }) -join "`n")+"`n</urlset>`n"
 [IO.File]::WriteAllText("$o/sitemap.xml",$sm,$enc); "sitemap: $($sitemap.Count) pages, $($posts.Count) posts"
