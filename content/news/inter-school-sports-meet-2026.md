@@ -1,5 +1,6 @@
 ---
 title: "Inter-School Sports Meet 2026"
+seo_description: "New Era Public School, Dwarka hosted the Inter-School Sports Meet on 13 October 2026, followed by Sports Day, Udyatam 2026, on 31 October."
 date: 2026-10-13
 category: Sports
 summary: "New Era hosted the Inter-School Sports Meet 2026, followed by our own Sports Day, Udyatam 2026, on 31 October."

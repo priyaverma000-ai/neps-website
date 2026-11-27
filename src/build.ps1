@@ -11,6 +11,27 @@ function Get-Text($html){ ([Net.WebUtility]::HtmlDecode(($html -replace '<[^>]+>
 # Windows PowerShell writes ' & < > as backslash-u escapes (u0027, u0026, u003c, u003e); PowerShell 7 does not. Use the plain characters so both give the same output.
 function ConvertTo-JsonText($x){ $j=($x | ConvertTo-Json -Depth 8 -Compress); $u=[string][char]92+'u00'; $j.Replace($u+'27',[string][char]39).Replace($u+'26','&').Replace($u+'3c','<').Replace($u+'3e','>') }
 function Enc($x){ [Net.WebUtility]::HtmlEncode([string]$x) }
+# Width and height attributes for an image in the site (JPEG or PNG), so the page doesn't jump while it loads
+$imgSizes=@{}
+function Get-ImageSize([string]$rel){
+  if(-not $rel -or $rel.StartsWith('http')){ return '' }
+  if($imgSizes.ContainsKey($rel)){ return $imgSizes[$rel] }
+  $r=''; $path="$o/$rel"
+  if(Test-Path $path){
+    $b=[IO.File]::ReadAllBytes($path)
+    if($b.Length -gt 24 -and $b[0] -eq 0x89 -and $b[1] -eq 0x50){ $w=[int]$b[16]*16777216+[int]$b[17]*65536+[int]$b[18]*256+[int]$b[19]; $hh=[int]$b[20]*16777216+[int]$b[21]*65536+[int]$b[22]*256+[int]$b[23]; $r=" width=`"$w`" height=`"$hh`"" }
+    elseif($b.Length -gt 4 -and $b[0] -eq 0xFF -and $b[1] -eq 0xD8){
+      $i=2
+      while($i+9 -lt $b.Length){
+        if($b[$i] -ne 0xFF){ break }
+        $mk=$b[$i+1]; $len=[int]$b[$i+2]*256+[int]$b[$i+3]
+        if(($mk -ge 0xC0 -and $mk -le 0xC3) -or ($mk -ge 0xC5 -and $mk -le 0xC7) -or ($mk -ge 0xC9 -and $mk -le 0xCB) -or ($mk -ge 0xCD -and $mk -le 0xCF)){ $hh=[int]$b[$i+5]*256+[int]$b[$i+6]; $w=[int]$b[$i+7]*256+[int]$b[$i+8]; $r=" width=`"$w`" height=`"$hh`""; break }
+        $i+=2+$len
+      }
+    }
+  }
+  $imgSizes[$rel]=$r; $r
+}
 $h=Part 'header'; $f=Part 'footer'; $head=Part 'head'; $enq=Part 'enquiry'; $calc=Part 'calc'; $nav=Part 'anav'; $tst=Part 'testimonials'
 # Page FAQs live in src/faqs.json: { "page.html": { "topic": "...", "faq": [[question, answer], ...] } }
 $faqs=[IO.File]::ReadAllText("$s/faqs.json",$enc) | ConvertFrom-Json
@@ -77,7 +98,7 @@ function ConvertFrom-Md([string]$md){
     if($ln.Trim() -eq ''){ & $flush; continue }
     if($ln -match '^(#{2,4})\s+(.+?)\s*#*$'){ & $flush; $n=$Matches[1].Length; $txt=$Matches[2]; $id=Get-Slug (Get-Text (ConvertTo-Inline $txt)); $out.Add("<h$n id=`"$id`">$(ConvertTo-Inline $txt)</h$n>"); continue }
     if($ln -match '^#\s+(.+)$'){ & $flush; $out.Add("<h2>$(ConvertTo-Inline $Matches[1])</h2>"); continue }
-    if($ln -match '^\s*!\[([^\]]*)\]\(([^)\s]+)\)\s*$'){ & $flush; $alt=Enc $Matches[1]; $out.Add("<figure><img loading=`"lazy`" src=`"$(Get-Src $Matches[2])`" alt=`"$alt`">$(if($alt){"<figcaption>$alt</figcaption>"})</figure>"); continue }
+    if($ln -match '^\s*!\[([^\]]*)\]\(([^)\s]+)\)\s*$'){ & $flush; $alt=Enc $Matches[1]; $out.Add("<figure><img loading=`"lazy`" src=`"$(Get-Src $Matches[2])`" alt=`"$alt`"$(Get-ImageSize (Get-Src $Matches[2]))>$(if($alt){"<figcaption>$alt</figcaption>"})</figure>"); continue }
     if($ln -match '^\s{0,3}[-*+]\s+(.*)$'){ if($mode -ne 'ul'){ & $flush; $mode='ul' }; $buf.Add($Matches[1]); continue }
     if($ln -match '^\s{0,3}\d+[.)]\s+(.*)$'){ if($mode -ne 'ol'){ & $flush; $mode='ol' }; $buf.Add($Matches[1]); continue }
     if($ln -match '^>\s?(.*)$'){ if($mode -ne 'quote'){ & $flush; $mode='quote' }; $buf.Add($Matches[1]); continue }
@@ -97,10 +118,11 @@ foreach($kind in 'blog','news'){
     $slug=Get-Slug $md.BaseName
     $date= try { [datetime]::Parse([string]$mt.date,$inv) } catch { $md.LastWriteTime }
     $words=([regex]::Matches($fm.body,'\w+')).Count
-    $posts.Add([pscustomobject]@{Kind=$kind;Slug=$slug;File="$kind-$slug.html";Path="/$kind-$slug";Title=[string]$mt.title;Date=$date;Category=$(if($mt.category){[string]$mt.category}else{ if($kind -eq 'blog'){'Parent Journal'}else{'News'} });Summary=[string]$mt.summary;Image=(Get-Src $mt.image);Alt=[string]$mt.image_alt;Featured=("$($mt.featured)" -eq 'true');Takeaways=@($mt.takeaways | Where-Object { $_ });Body=$fm.body;Minutes=[Math]::Max(1,[Math]::Ceiling($words/200))})
+    $posts.Add([pscustomobject]@{Kind=$kind;Slug=$slug;File="$kind-$slug.html";Path="/$kind-$slug";Title=[string]$mt.title;SeoTitle=[string]$mt.seo_title;SeoDesc=[string]$mt.seo_description;Date=$date;Category=$(if($mt.category){[string]$mt.category}else{ if($kind -eq 'blog'){'Parent Journal'}else{'News'} });Summary=[string]$mt.summary;Image=(Get-Src $mt.image);Alt=[string]$mt.image_alt;Featured=("$($mt.featured)" -eq 'true');Takeaways=@($mt.takeaways | Where-Object { $_ });Body=$fm.body;Minutes=[Math]::Max(1,[Math]::Ceiling($words/200))})
   }
 }
 $posts=@($posts | Sort-Object @{Expression='Date';Descending=$true},@{Expression='Kind';Descending=$false},@{Expression='Slug';Descending=$false})
+$postByFile=@{}; foreach($x in $posts){ $postByFile[$x.File]=$x }
 function Get-Card($p){
   $img= if($p.Image){ $p.Image } else { 'images/campus-wide-sm.jpg' }
   $alt= if($p.Alt){ Enc $p.Alt } else { '' }
@@ -113,14 +135,16 @@ function Get-PostPage($p){
   $bodyHtml=ConvertFrom-Md $p.Body
   $toc=[regex]::Matches($bodyHtml,'<h2 id="([^"]+)">(.*?)</h2>') | ForEach-Object { "        <a href=`"#$($_.Groups[1].Value)`">$($_.Groups[2].Value)</a>" }
   $long=$p.Date.ToString('d MMMM yyyy',$inv)
-  $cover= if($p.Image){ "  <div class=`"acover`"><img src=`"$($p.Image)`" alt=`"$(Enc $p.Alt)`" fetchpriority=`"high`"></div>`n" } else { '' }
+  $cover= if($p.Image){ "  <div class=`"acover`"><img src=`"$($p.Image)`" alt=`"$(Enc $p.Alt)`"$(Get-ImageSize $p.Image) fetchpriority=`"high`"></div>`n" } else { '' }
   $take= if($p.Takeaways.Count){ "      <div class=`"takeaway`">`n        <h2>In short</h2>`n        <ul class=`"tick`">"+(($p.Takeaways | ForEach-Object { "<li>$(ConvertTo-Inline $_)</li>" }) -join '')+"</ul>`n      </div>`n" } else { '' }
   $ld=[ordered]@{'@context'='https://schema.org';'@type'=$(if($isBlog){'BlogPosting'}else{'NewsArticle'});headline=$p.Title;datePublished=$p.Date.ToString('yyyy-MM-dd');dateModified=$p.Date.ToString('yyyy-MM-dd');inLanguage='en-IN';image="$site/images/$ogImg";author=[ordered]@{'@type'='Organization';name='New Era Public School, Dwarka';url="$site/"};publisher=[ordered]@{'@type'='Organization';name='New Era Public School, Dwarka';logo=[ordered]@{'@type'='ImageObject';url="$site/images/logo-full.png"}};mainEntityOfPage="$site$($p.Path)"}
   $share=[uri]::EscapeDataString("$($p.Title): $site$($p.Path)")
-  $desc= if($p.Summary){ $p.Summary } else { $p.Title }
-  $tocBlock= if($toc){ "      <div class=`"card toc`">`n        <h3>In this article</h3>`n"+($toc -join "`n")+"`n      </div>`n" } else { '' }
+  $desc= if($p.SeoDesc){ $p.SeoDesc } elseif($p.Summary){ $p.Summary } else { $p.Title }
+  # Google shows about 60 characters of a title: add the school name only when it fits
+  $seoTitle= if($p.SeoTitle){ $p.SeoTitle } elseif(($p.Title.Length + 14) -le 60){ "$($p.Title) | NEPS Dwarka" } else { $p.Title }
+  $tocBlock= if($toc){ "      <div class=`"card toc`">`n        <h2>In this article</h2>`n"+($toc -join "`n")+"`n      </div>`n" } else { '' }
 @"
-<!--META $(Enc $p.Title) | NEPS Dwarka||$(Enc $desc)||$($p.Path)||$ogImg||$(Enc $p.Title)-->
+<!--META $(Enc $seoTitle)||$(Enc $desc)||$($p.Path)||$ogImg||$(Enc $p.Title)-->
 <div class="progress" aria-hidden="true"></div>
 <main id="main">
 <script type="application/ld+json">$(ConvertTo-JsonText $ld)</script>
@@ -134,7 +158,7 @@ $cover  <div class="alayout">
     <article class="prose">
 $take$bodyHtml
       <div class="inline-cta">
-        <h3>See New Era for yourself</h3>
+        <h2>See New Era for yourself</h2>
         <p>Walk the campus with our team, and bring your questions.</p>
         <div class="row"><button class="btn btn-gold" data-open="visit">Book a Campus Visit</button><a class="btn btn-light" href="admissions.html">Admissions 2027-28</a></div>
       </div>
@@ -190,7 +214,7 @@ if($media){
 }
 foreach($pg in $pages){
   if($pg.Name -eq 'blog.html'){
-    $featHtml= if($feat){ "<a class=`"feat`" href=`"$($feat.File)`">`n      <img src=`"$(if($feat.Image){$feat.Image}else{'images/campus-wide.jpg'})`" alt=`"$(Enc $feat.Alt)`" fetchpriority=`"high`">`n      <div class=`"feat-b`">`n        <div class=`"meta`"><span class=`"cat`">$(Enc $feat.Category)</span>$($feat.Date.ToString('MMM yyyy',$inv)) &middot; $($feat.Minutes) min read</div>`n        <h2>$(Enc $feat.Title)</h2>`n        <p>$(Enc $feat.Summary)</p>`n      </div>`n    </a>" } else { '' }
+    $featHtml= if($feat){ "<a class=`"feat`" href=`"$($feat.File)`">`n      <img src=`"$(if($feat.Image){$feat.Image}else{'images/campus-wide.jpg'})`" alt=`"$(Enc $feat.Alt)`"$(Get-ImageSize $(if($feat.Image){$feat.Image}else{'images/campus-wide.jpg'})) fetchpriority=`"high`">`n      <div class=`"feat-b`">`n        <div class=`"meta`"><span class=`"cat`">$(Enc $feat.Category)</span>$($feat.Date.ToString('MMM yyyy',$inv)) &middot; $($feat.Minutes) min read</div>`n        <h2>$(Enc $feat.Title)</h2>`n        <p>$(Enc $feat.Summary)</p>`n      </div>`n    </a>" } else { '' }
     $cats=@($blogPosts | ForEach-Object { $_.Category } | Select-Object -Unique)
     $chips=(@('<button class="chip" data-filter="all" aria-pressed="true">All</button>')+($cats | ForEach-Object { "<button class=`"chip`" data-filter=`"$(Get-Slug $_)`" aria-pressed=`"false`">$(Enc $_)</button>" })) -join "`n  "
     $pg.Content=$pg.Content.Replace('<!--BLOGFEAT-->',$featHtml).Replace('<!--BLOGCHIPS-->',$chips).Replace('<!--BLOGCARDS-->',(($blogPosts | ForEach-Object { '      '+(Get-Card $_) }) -join "`n"))
@@ -233,10 +257,11 @@ foreach($pg in $pages){
     $graph=[ordered]@{'@context'='https://schema.org';'@graph'=@(
       [ordered]@{'@type'='WebPage';'@id'="$url#webpage";url=$url;name=(Get-Text $v[0]);description=(Get-Text $v[1]);inLanguage='en-IN';isPartOf=@{'@id'="$site/#website"};about=@{'@id'="$site/#school"};primaryImageOfPage="$site/images/$($v[3])"},
       [ordered]@{'@type'='WebSite';'@id'="$site/#website";url="$site/";name='New Era Public School, Dwarka';publisher=@{'@id'="$site/#school"}},
-      [ordered]@{'@type'='School';'@id'="$site/#school";name='New Era Public School, Dwarka';url="$site/";telephone='+91-9910119040';email='info@nepsdwarka.com';address=[ordered]@{'@type'='PostalAddress';streetAddress='Sector 25, Dwarka';addressLocality='New Delhi';postalCode='110077';addressCountry='IN'}},
+      [ordered]@{'@type'='School';'@id'="$site/#school";name='New Era Public School, Dwarka';alternateName='NEPS Dwarka';url="$site/";logo="$site/images/logo-full.png";image="$site/images/campus-entrance.jpg";sameAs=@('https://www.instagram.com/newerapublicschool.dwarka','https://www.facebook.com/NewEraPublicSchoolDwarkaOfficialPage','https://www.youtube.com/channel/UCQszE6wbTXAss4sAz84jbWg');telephone='+91-9910119040';email='info@nepsdwarka.com';address=[ordered]@{'@type'='PostalAddress';streetAddress='Sector 25, Dwarka';addressLocality='New Delhi';addressRegion='Delhi';postalCode='110077';addressCountry='IN'}},
       [ordered]@{'@type'='BreadcrumbList';itemListElement=@($items)}
     )}
-    $top=$head.Replace('{{title}}',$v[0]).Replace('{{desc}}',$v[1]).Replace('{{path}}',$v[2]).Replace('{{img}}',$v[3]).Replace('<!--ROBOTS-->',$(if($v.Count -gt 5){"<meta name=`"robots`" content=`"$($v[5])`">"}else{''}))
+    $top=$head.Replace('{{title}}',$v[0]).Replace('{{desc}}',$v[1]).Replace('{{path}}',$v[2]).Replace('{{img}}',$v[3]).Replace('<!--ROBOTS-->',$(if($v.Count -gt 5){"<meta name=`"robots`" content=`"$($v[5])`">"}else{'<meta name="robots" content="index, follow, max-image-preview:large">'}))
+    if($postByFile[$p]){ $top=$top.Replace('<meta property="og:type" content="website">',"<meta property=`"og:type`" content=`"article`">`n<meta property=`"article:published_time`" content=`"$($postByFile[$p].Date.ToString('yyyy-MM-dd'))`">") }
     $top=$top.Replace('<!--SCHEMA-->','<script type="application/ld+json">'+(ConvertTo-JsonText $graph)+'</script>')
     $c=$top+"<body>`n<!--HEADER-->`n"+$c.Substring($m.Length)+"`n<!--FOOTER-->`n</body>`n</html>`n"
   }

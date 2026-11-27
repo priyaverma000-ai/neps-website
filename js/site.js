@@ -195,6 +195,26 @@
     } else { loadIg(); }
   }
 
+  /* Parent videos: load and play on tap; only one plays at a time */
+  $$('.pv').forEach(function (card) {
+    var btn = $('.pv-play', card);
+    if (!btn) return;
+    btn.addEventListener('click', function () {
+      $$('.pv video').forEach(function (other) { other.pause(); });
+      var v = $('video', card);
+      if (!v) {
+        v = document.createElement('video');
+        v.src = card.getAttribute('data-src'); v.controls = true; v.playsInline = true; v.preload = 'auto';
+        v.setAttribute('playsinline', '');
+        var img = $('img', card); if (img) v.poster = img.currentSrc || img.src;
+        card.insertBefore(v, btn);
+      }
+      card.classList.add('is-playing');
+      var p = v.play(); if (p && p.catch) p.catch(function () {});
+      track('parent_video_play');
+    });
+  });
+
   /* Print a checklist */
   $$('[data-print]').forEach(function (b) {
     b.addEventListener('click', function () { window.print(); });

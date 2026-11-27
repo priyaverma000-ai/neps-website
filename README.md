@@ -42,7 +42,7 @@ Add `||noindex` at the end to keep a page out of Google.
 ## FAQs and parent videos
 
 - **FAQs:** each page's questions live in `src/faqs.json`. Edit the question and answer text there and rebuild. The build adds the FAQ section and Google's FAQ markup to the page.
-- **Parent videos:** the three cards on Home and the Reviews page are in `src/tpl/_testimonials.html`. Upload each video to YouTube, then paste its ID (the part after `watch?v=`) into that card's `data-yt=""`. The card then shows the video's thumbnail and plays it when tapped. Until then it shows "Recording pending".
+- **Parent videos:** the seven parent videos on Home and the Reviews page are in `src/tpl/_testimonials.html`. Each card plays `video/parent-review-N.mp4` (540x960, about 1 Mbps) with the cover image `images/parent-review-N.jpg`, and the section carries Google VideoObject data. To add one, copy a card, add the files, and add a matching VideoObject entry.
 
 ## Forms
 

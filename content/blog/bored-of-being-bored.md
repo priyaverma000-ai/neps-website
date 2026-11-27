@@ -1,5 +1,6 @@
 ---
 title: "Bored of being bored"
+seo_description: "A New Era student on life after the last board exam, and why being bored now and then helps young minds rest, notice and create."
 date: 2023-04-25
 category: Student voices
 summary: "A student's story of what comes after the last board exam."

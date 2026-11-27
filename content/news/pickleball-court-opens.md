@@ -1,5 +1,6 @@
 ---
 title: "New pickleball court opens on Independence Day"
+seo_description: "Chairperson Mrs. Usha Chopra opened the new pickleball court at New Era Public School, Dwarka during the Independence Day celebration in 2026."
 date: 2026-08-14
 category: Sports
 summary: "Chairperson Mrs. Usha Chopra opened the school's new pickleball court during the Independence Day celebration."

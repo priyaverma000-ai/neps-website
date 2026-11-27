@@ -1,5 +1,6 @@
 ---
 title: "Admission forms for Nursery, LKG and UKG 2027-28 open on 1 December"
+seo_title: "Nursery, LKG and UKG Admission 2027-28: Forms Open 1 Dec"
 date: 2026-11-25
 category: Admissions
 summary: "Forms are available from 1 to 28 December 2026, as set by the DoE schedule. The first list is out on 20 January 2027."

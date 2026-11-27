@@ -1,5 +1,6 @@
 ---
 title: "New Era in The Hindu, India Today and BW Education"
+seo_title: "New Era in The Hindu, India Today and BW Education"
 date: 2026-11-14
 category: In the media
 summary: "Our Director and Head of School wrote and spoke on vocational learning, skill-based education and student wellbeing in November 2026."

@@ -1,5 +1,7 @@
 ---
 title: "Mindfulness and generosity can help us go a long way"
+seo_title: "Mindfulness and Generosity | NEPS Dwarka Blog"
+seo_description: "How staying present and small acts of kindness can ease stress, improve relationships and make students happier. From New Era Public School, Dwarka."
 date: 2023-05-19
 category: Wellbeing
 summary: "How one small kindness can stay with someone all day."

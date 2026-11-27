@@ -1,5 +1,7 @@
 ---
 title: "Future of A.I."
+seo_title: "Future of A.I.: Promise and Risks | NEPS Dwarka Blog"
+seo_description: "A New Era student looks at how artificial intelligence will change healthcare, transport, business and education, and the risks it brings."
 date: 2023-05-25
 category: Future skills
 summary: "The promise and the risks of artificial intelligence."

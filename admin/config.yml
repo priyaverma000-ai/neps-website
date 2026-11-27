@@ -42,6 +42,8 @@ collections:
     summary: '{{title}}  ({{date}})'
     fields:
       - {label: Title, name: title, widget: string}
+      - {label: Google title (optional; keep under 60 characters), name: seo_title, widget: string, required: false}
+      - {label: Google description (optional; 120 to 155 characters, else the summary is used), name: seo_description, widget: text, required: false}
       - {label: Publish date, name: date, widget: datetime, format: 'YYYY-MM-DD', date_format: 'DD MMM YYYY', time_format: false}
       - {label: Category, name: category, widget: select, options: [Admissions, Parenting, Sports, Wellbeing, Future skills, Student voices, Campus life]}
       - {label: Summary (one or two lines, shown on cards and in Google), name: summary, widget: text}
@@ -96,6 +98,8 @@ collections:
     summary: '{{title}}  ({{date}})'
     fields:
       - {label: Title, name: title, widget: string}
+      - {label: Google title (optional; keep under 60 characters), name: seo_title, widget: string, required: false}
+      - {label: Google description (optional; 120 to 155 characters, else the summary is used), name: seo_description, widget: text, required: false}
       - {label: Date, name: date, widget: datetime, format: 'YYYY-MM-DD', date_format: 'DD MMM YYYY', time_format: false}
       - {label: Category, name: category, widget: select, options: [Admissions, Events, Achievements, Sports, Academics, Announcements, In the media]}
       - {label: Summary (one or two lines, shown on cards and in Google), name: summary, widget: text}

@@ -1,5 +1,6 @@
 ---
 title: "Ways to address bullying"
+seo_description: "What bullying is, the forms it takes, and seven practical ways students can stop it. A student voice from New Era Public School, Dwarka."
 date: 2023-05-29
 category: Wellbeing
 summary: "What bullying looks like, and what students can do when they see it."

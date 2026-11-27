@@ -1,5 +1,6 @@
 ---
 title: "Why sports matter in school: inside a campus with a shooting range"
+seo_title: "Why Sports Matter in School: Inside a Dwarka Campus"
 date: 2026-11-01
 category: Sports
 summary: "What sport teaches children that a classroom can't, what to look for on a school visit, and a look inside New Era's Sports Centre in Dwarka."

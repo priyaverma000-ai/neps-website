@@ -1,5 +1,7 @@
 ---
 title: "Sustainable development goals"
+seo_title: "Sustainable Development Goals: A Student View | NEPS"
+seo_description: "A New Era student imagines a fairer, cleaner world and lists the 17 United Nations Sustainable Development Goals for 2030."
 date: 2023-04-18
 category: Student voices
 summary: "A student imagines a kinder, cleaner world."

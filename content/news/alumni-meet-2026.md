@@ -1,5 +1,7 @@
 ---
 title: "Alumni Meet 2026 brings New Erians back to campus"
+seo_title: "Alumni Meet 2026 | New Era Public School Dwarka"
+seo_description: "Former students of New Era Public School, Dwarka came back to campus on 1 November 2026. Read alumni stories and join the alumni list."
 date: 2026-11-01
 category: Events
 summary: "Former students came back to Sector 25 on 1 November 2026 for the Alumni Meet."
